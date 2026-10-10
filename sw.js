@@ -1,6 +1,6 @@
 /* service worker: la web funciona sin conexion. Subir VERSION al cambiar archivos del cascaron. */
-var VERSION = 'ci-v1';
-var CASCARON = ['/', '/estilo.css', '/app.js', '/articulos.js', '/config.js', '/manifest.webmanifest',
+var VERSION = 'anima-v1';
+var CASCARON = ['/', '/estilo.css', '/fuentes/Marcellus-400.woff2', '/fuentes/HankenGrotesk.woff2', '/app.js', '/articulos.js', '/config.js', '/manifest.webmanifest',
   '/icons/icon-192.png', '/icons/icon-512.png', '/icons/favicon-32.png', '/icons/apple-touch-icon.png'];
 
 self.addEventListener('install', function(e){

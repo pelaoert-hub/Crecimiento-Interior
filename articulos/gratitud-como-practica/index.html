@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>La gratitud como práctica diaria · Ánima</title>
+<meta name="description" content="Agradecer no niega lo difícil. Es aprender a ver también lo que está bien.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://vantlygo.com/articulos/gratitud-como-practica/">
+<meta property="og:title" content="La gratitud como práctica diaria"><meta property="og:description" content="Agradecer no niega lo difícil. Es aprender a ver también lo que está bien."><meta property="og:type" content="article"><meta property="og:url" content="https://vantlygo.com/articulos/gratitud-como-practica/"><meta property="og:image" content="https://vantlygo.com/icons/icon-512.png">
+<meta name="theme-color" content="#0a0820">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" href="/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="preload" href="/fuentes/Marcellus-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/estilo.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"La gratitud como práctica diaria","description":"Agradecer no niega lo difícil. Es aprender a ver también lo que está bien.","inLanguage":"es","mainEntityOfPage":"https://vantlygo.com/articulos/gratitud-como-practica/","publisher":{"@type":"Organization","name":"Ánima"}}</script>
+</head>
+<body class="pagina-articulo">
+<canvas class="estrellas" id="estrellas" aria-hidden="true"></canvas>
+<header class="cab"><div class="ancho">
+  <a class="marca" href="/"><img src="/icons/favicon-32.png" alt="" width="26" height="26">Ánima</a>
+  <a class="btn-menu" href="/#biblioteca" style="text-decoration:none">Biblioteca</a>
+</div></header>
+<main><article class="lectura">
+  <a href="/#biblioteca" class="volver">← Biblioteca</a>
+  <p style="margin-top:18px"><span class="etiqueta">Gratitud</span> <span class="etiqueta">4 min</span> <span class="etiqueta" style="color:#f3d4a8">Borrador sin revisar</span></p>
+  <h1>La gratitud como práctica diaria</h1>
+  <p class="entradilla">Agradecer no niega lo difícil. Es aprender a ver también lo que está bien.</p>
+  <p>Agradecer no significa que todo esté bien ni que debas fingir alegría. Es entrenar la mirada para que, junto a lo que pesa, también veas lo que sostiene.</p>
+<h2>Un ejercicio de dos minutos</h2>
+<p>Cada noche, escribe tres cosas concretas por las que te sientes agradecido. Mejor lo pequeño y específico ("el café caliente de la mañana", "la llamada de mi hermana") que lo general ("la vida").</p>
+<p>Si un día no encuentras nada, está bien. Escribe una sola cosa, aunque sea mínima.</p>
+<p>Con el tiempo, el diario se convierte en un lugar al que volver cuando te cuesta ver lo bueno. Lo tienes en <a href="/#practicas">las prácticas</a>.</p>
+  <div class="acciones"><button class="boton" id="compartir" type="button">Compartir</button> <a class="boton lleno" href="/articulos/compasion-metta/">Siguiente: Compasión: desearle bien a otros, y a ti →</a></div>
+</article></main>
+<footer><div class="ancho">Ánima · Orientación general; no sustituye ayuda médica ni psicológica.</div></footer>
+<script>
+document.getElementById('compartir').onclick=function(){var d={title:document.title,url:location.href};
+ if(navigator.share){navigator.share(d).catch(function(){})}else if(navigator.clipboard){navigator.clipboard.writeText(d.url);this.textContent='Enlace copiado'}};
+(function(){var c=document.getElementById('estrellas'),x=c.getContext('2d');if(!x)return;var D=Math.min(devicePixelRatio||1,2),W=c.width=innerWidth*D,H=c.height=innerHeight*D,n=Math.round(innerWidth*innerHeight/11000);
+ x.fillStyle='#fff';for(var i=0;i<n;i++){x.globalAlpha=.3+Math.random()*.5;x.beginPath();x.arc(Math.random()*W,Math.random()*H,(Math.random()*1.1+.3)*D,0,6.3);x.fill()}})();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});
+</script>
+</body>
+</html>
