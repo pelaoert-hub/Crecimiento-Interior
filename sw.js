@@ -1,5 +1,5 @@
 /* service worker: la web funciona sin conexion. Subir VERSION al cambiar archivos del cascaron. */
-var VERSION = 'anima-v3';
+var VERSION = 'anima-v4';
 var CASCARON = ['/', '/estilo.css', '/fuentes/Marcellus-400.woff2', '/fuentes/HankenGrotesk.woff2', '/app.js', '/articulos.js', '/lecturas.js', '/lecturas-ui.js', '/iching.js', '/capas.js', '/cuba/', '/cuba-datos.js', '/cuba.js', '/config.js', '/manifest.webmanifest',
   '/icons/icon-192.png', '/icons/icon-512.png', '/icons/favicon-32.png', '/icons/apple-touch-icon.png'];
 

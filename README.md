@@ -56,9 +56,11 @@ Al cambiar archivos de la web, **subir `VERSION` en `sw.js`** para que los móvi
 - La asociación de sefirot con números de fecha es una adaptación moderna, no doctrina cabalística tradicional; también se dice en la web.
 - Los textos son interpretaciones generales en revisión. No incluyen predicciones de salud, dinero ni muerte.
 
-## Capa Cuba: cómo se verificó
+## Capa Cuba: cómo se contrastó
 
-Cada dato de `cuba-datos.js` lleva los números de las fuentes (lista `FUENTES`) donde se comprobó, y la página los muestra.
+Estas religiones son de tradición oral: el conocimiento se transmite por iniciación y no hay un texto único que lo recoja. «Contrastado» solo significa que **varias fuentes públicas coinciden**; no lo confirma la propia tradición. La confirmación solo puede venir de practicantes iniciados.
+
+Cada dato de `cuba-datos.js` lleva los números de las fuentes públicas (lista `FUENTES`) donde se contrastó, y la página los muestra.
 
 - Lo que aparece en **una sola fuente** se marca así. Lo que las fuentes **contradicen** (el santo de Ochosi, Osun u Osain; algunos colores; la fecha de Elegguá, que una fuente da como 3 de junio) se avisa o se deja fuera.
 - Los fragmentos del diloggún entre comillas son literales de la fuente 5 (Proyecto Orunmila). Los orishas que hablan en cada letra son de la fuente 4 (EcuRed). Las preguntas «para pensar» son de Ánima y no pertenecen a la tradición.
