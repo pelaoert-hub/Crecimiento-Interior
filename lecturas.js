@@ -172,6 +172,38 @@ var PALMA = {
  vida:{amplia:['Línea de la vida amplia y curva','suele leerse como vitalidad y apertura a la experiencia',['Iniciativa']],cerrada:['Línea de la vida pegada al pulgar','suele leerse como tendencia a cuidar la energía y a la cautela',['Introspección']]}
 };
 
+
+/* ---------- arboles celtas (calendario MODERNO de Robert Graves, 1948; fechas segun Learn Religions) ---------- */
+var ARBOLES = [
+ ['Abedul','Beth',12,24,1,20,'renacimiento y regeneración, un impulso extra para empezar cosas nuevas; se asocia con la creatividad, la fertilidad, la curación y la protección',['Cambio','Iniciativa']],
+ ['Serbal','Luis',1,21,2,17,'la diosa Brighid, protectora del hogar, y con el poder personal y el éxito; se usaba como protección',['Iniciativa','Estabilidad']],
+ ['Fresno','Nion',2,18,3,17,'rituales del océano, la potencia mágica, los sueños proféticos y los viajes espirituales',['Introspección']],
+ ['Aliso','Fearn',3,18,4,14,'las decisiones espirituales, la profecía, la adivinación y el contacto con la propia intuición',['Introspección']],
+ ['Sauce','Saille',4,15,5,12,'la curación y el crecimiento; el nutrir, el conocimiento que crece y los misterios femeninos',['Sensibilidad']],
+ ['Espino blanco','Huath',5,13,6,9,'la fertilidad, la energía masculina y el fuego; las decisiones de negocios y los contactos profesionales',['Iniciativa']],
+ ['Roble','Duir',6,10,7,7,'la protección, la fuerza, la fertilidad, el éxito y la buena fortuna',['Estabilidad']],
+ ['Acebo','Tinne',7,8,8,4,'la firmeza; se usaba en armas y en magia protectora, y una ramita en casa se asocia con la suerte y la seguridad',['Estabilidad']],
+ ['Avellano','Coll',8,5,9,1,'la sabiduría y la protección; los pozos sagrados y el salmón del conocimiento, la adivinación, los sueños y la inspiración creativa',['Creatividad','Introspección']],
+ ['Vid','Muin',9,2,9,29,'la felicidad y también la ira, emociones apasionadas; la alegría, la exaltación y el equilibrio del equinoccio de otoño',['Sensibilidad']],
+ ['Hiedra','Gort',9,30,10,27,'la vida que continúa tras la muerte, el ciclo de vida, muerte y renacimiento; alejar lo negativo, mejorarse, proteger y cooperar',['Cambio']],
+ ['Caña','Negetal',10,28,11,23,'los muertos y el inframundo; la adivinación, la meditación y honrar el ciclo de la vida y el renacimiento',['Introspección']],
+ ['Saúco','Ruish',11,24,12,23,'los finales y los comienzos, la recuperación rápida; la creatividad, la renovación y la protección',['Cambio','Creatividad']]
+];
+function arbolDe(m, d){
+  var v = m * 100 + d;
+  for(var i = 0; i < ARBOLES.length; i++){
+    var a = ARBOLES[i], ini = a[2]*100 + a[3], fin = a[4]*100 + a[5];
+    if(ini <= fin ? (v >= ini && v <= fin) : (v >= ini || v <= fin)) return a;
+  }
+  return null;
+}
+function cartaArbol(a, etiqueta){
+  var MESES = ['','enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var c = carta('Árboles celtas (calendario moderno)', '❦', [{k: etiqueta + ': ' + a[0] + ' (' + a[1] + ')', d: 'Del ' + a[3] + ' de ' + MESES[a[2]] + ' al ' + a[5] + ' de ' + MESES[a[4]] + '. Se asocia con ' + a[6] + '.', tags: a[7]}]);
+  c.nota = 'Este calendario lo inventó el poeta Robert Graves en su libro The White Goddess (1948). No es un sistema celta antiguo y no se parece a los calendarios celtas documentados. Las fechas varían algo según el autor.';
+  return c;
+}
+
 /* ---------- utilidades de resultado ---------- */
 function signoDeLon(l){ return SIGNOS[Math.floor(n360(l)/30)]; }
 function carta(trad, simbolo, items, pregunta){
@@ -236,7 +268,8 @@ function leer(datos){
   var wd = new Date(Date.UTC(y, m-1, d)).getUTCDay(), dp = DIAS[wd];
   var dia = carta('Día de la semana (planetario)', '☉', [{k: 'Naciste un ' + dp[0], d: 'La tradición lo asocia con ' + dp[1] + ': ' + dp[2] + '.', tags: dp[3]}]);
 
-  var tarjetasNac = [astro, chino, numer, cabala, tarot, dia];
+  var arbolNac = arbolDe(m, d);
+  var tarjetasNac = [astro, chino, cartaArbol(arbolNac, 'Naciste en el mes del'), numer, cabala, tarot, dia];
 
   /* quiromancia */
   var palma = datos.palma || {}, pItems = [];
@@ -276,7 +309,8 @@ function leer(datos){
     ], '¿Qué intención quiero plantar este mes?'),
     numCarta(persMes, 'Mes personal', '¿Qué hábito pequeño le da forma a este mes?'),
     carta('Tarot', '✦', [{k: 'Arcano del mes: ' + ARCANOS[idxArcano(arcMes)][0], d: ARCANOS[idxArcano(arcMes)][1].charAt(0).toUpperCase() + ARCANOS[idxArcano(arcMes)][1].slice(1) + '.', tags: ARCANOS[idxArcano(arcMes)][2]}], ARCANOS[idxArcano(arcMes)][3]),
-    sefCarta(persMes, 'Sefirá del mes')
+    sefCarta(persMes, 'Sefirá del mes'),
+    cartaArbol(arbolDe(am, ad), 'Mes actual')
   ];
 
   /* ano */
@@ -300,5 +334,5 @@ function coincidencias(tarjetas){
   return TEMAS.filter(function(t){ return mapa[t] && mapa[t].length >= 2; }).map(function(t){ return {tema: t, tradiciones: mapa[t]}; }).sort(function(a,b){ return b.tradiciones.length - a.tradiciones.length; });
 }
 
-raiz.Lecturas = {leer: leer, coincidencias: coincidencias, _t: {lonSol: lonSol, lonLuna: lonLuna, anoNuevoChino: anoNuevoChino, caminoDeVida: caminoDeVida, sumaNombre: sumaNombre, esVocal: esVocal, red: red, arcanosDe: arcanosDe, utcDeLocal: utcDeLocal, proximaFase: proximaFase, elong: elong, T_de: T_de}};
+raiz.Lecturas = {leer: leer, coincidencias: coincidencias, _t: {arbolDe: arbolDe, lonSol: lonSol, lonLuna: lonLuna, anoNuevoChino: anoNuevoChino, caminoDeVida: caminoDeVida, sumaNombre: sumaNombre, esVocal: esVocal, red: red, arcanosDe: arcanosDe, utcDeLocal: utcDeLocal, proximaFase: proximaFase, elong: elong, T_de: T_de}};
 })(typeof window !== 'undefined' ? window : globalThis);

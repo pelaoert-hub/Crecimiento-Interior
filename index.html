@@ -24,9 +24,15 @@
   <button class="btn-menu" id="abrir-menu" type="button" aria-expanded="false" aria-controls="menu">Menú</button>
 </div></header>
 
+<div class="vidrio capa-banner oculto" id="capa-banner" role="region" aria-label="Capa Cuba">
+  <p>¿Quieres ver la capa de Cuba? Reúne información sobre los orishas, el sincretismo y las formas de adivinación afrocubanas, con la fuente de cada dato.</p>
+  <button class="boton lleno" id="capa-si" type="button">Activar</button><button class="boton" id="capa-no" type="button">Ahora no</button>
+</div>
+
 <nav class="menu" id="menu" aria-label="Principal" aria-hidden="true">
   <button class="btn-menu cerrar" id="cerrar-menu" type="button">Cerrar</button>
-  <a href="#hoy">Hoy</a><a href="#practicas">Prácticas</a><a href="#lecturas">Lecturas</a><a href="#tradiciones">Tradiciones</a><a href="#biblioteca">Biblioteca</a><a href="#velas">Velas</a><a href="#mi-practica">Mi práctica</a><a href="#instalar">Instalar</a>
+  <a href="#hoy">Hoy</a><a href="#practicas">Prácticas</a><a href="#lecturas">Lecturas</a><a href="#tradiciones">Tradiciones</a><a href="#biblioteca">Biblioteca</a><a href="#velas">Velas</a><a href="#mi-practica">Mi práctica</a><a href="#instalar">Instalar</a><a id="menu-cuba" class="oculto" href="/cuba/">Cuba</a>
+  <button class="btn-menu capa-estado" id="capa-toggle" type="button" aria-pressed="false">Capa Cuba: desactivada</button>
 </nav>
 
 <main>
@@ -110,7 +116,16 @@
     </div>
     <div class="lec-cuerpo" id="lec-cuerpo"></div>
   </div>
+  <div class="vidrio tile lec-iching" id="iching">
+    <span class="etq">Otra mirada</span><h3>I Ching</h3>
+    <p class="nota">Libro oracular chino, uno de los Cinco Clásicos confucianos; su nombre significa «libro de las mutaciones». Se consulta lanzando tres monedas seis veces, una por cada línea del hexagrama.</p>
+    <label for="ic-pregunta">Tu pregunta <span class="nota">(opcional; para ti)</span></label>
+    <input id="ic-pregunta" maxlength="160" autocomplete="off">
+    <button class="boton lleno" id="ic-lanzar" type="button">Lanzar las monedas</button>
+    <div id="ic-resultado" hidden></div>
+  </div>
 </div></section>
+
 
 <section id="tradiciones"><div class="ancho">
   <div class="enc aparece"><span class="etq">Sabiduría compartida</span><h2>Tradiciones</h2><p>Muchas culturas desarrollaron prácticas parecidas. Aquí un resumen breve de algunas. Cada una tiene su profundidad y sus maestros.</p></div>
@@ -121,6 +136,15 @@
     <details class="vidrio"><summary><span>Examen de conciencia<small>Tradición ignaciana</small></span></summary><div class="c"><p>Un repaso breve del día en la tradición cristiana ignaciana: agradecer, mirar con honestidad lo vivido, pedir perdón y mirar al día siguiente.</p><p>Es la base del <a href="#practicas">examen del día</a> de esta web.</p></div></details>
   </div>
   <p class="aviso">Descripciones generales en revisión. Si perteneces a alguna de estas tradiciones y ves algo que corregir, es bienvenido.</p>
+</div></section>
+
+<section id="cuba" class="oculto"><div class="ancho">
+  <div class="vidrio cuba-teaser">
+    <span class="etq">Capa Cuba</span><h2>Tradiciones afrocubanas</h2>
+    <p>Los orishas y sus santos católicos, el sincretismo, y cómo adivinan la Regla de Ocha (caracoles), Ifá (tablero de Orula) y Palo Monte. Cada dato indica de qué fuente sale.</p>
+    <a class="boton lleno" href="/cuba/">Entrar a la capa Cuba</a>
+    <p class="nota">Información cultural, no una consulta. Pendiente de revisión por practicantes.</p>
+  </div>
 </div></section>
 
 <section id="biblioteca"><div class="ancho">
@@ -218,5 +242,7 @@
 <script src="/app.js"></script>
 <script src="/lecturas.js"></script>
 <script src="/lecturas-ui.js"></script>
+<script src="/iching.js"></script>
+<script src="/capas.js"></script>
 </body>
 </html>
