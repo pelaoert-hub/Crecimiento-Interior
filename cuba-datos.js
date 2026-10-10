@@ -20,7 +20,11 @@ var FUENTES = [
  {t:'The Study of Afro-Cuban Religions (Western Kentucky University)', u:'https://digitalcommons.wku.edu/context/stu_researcher/article/1004/viewcontent/finalversionThe_Study_of_Afro_Cuban_Religions_Historiography_finished.pdf'},
  {t:'African cosmology of the Bântu-Kôngo (registro del Internet Archive)', u:'https://archive.org/details/africancosmology00kimb'},
  {t:'Ifá Heritage University, Oyo & Prof. Wande Abimbola (UNILAG)', u:'https://unilaglss.wordpress.com/2013/08/31/ifa-heritage-university-oyo-prof-wande-abimbola/'},
- {t:'From John S. Mbiti to Jacob K. Olupona (Cleveland State University)', u:'https://engagedscholarship.csuohio.edu/cgi/viewcontent.cgi?article=1070&context=jtb'}
+ {t:'From John S. Mbiti to Jacob K. Olupona (Cleveland State University)', u:'https://engagedscholarship.csuohio.edu/cgi/viewcontent.cgi?article=1070&context=jtb'},
+ {t:'Los orishas en Cuba (registro de Google Libros)', u:'https://books.google.com/books/about/Los_orishas_en_Cuba.html?id=6ygvAAAAYAAJ'},
+ {t:'Natalia Bolívar (EcuRed)', u:'https://www.ecured.cu/Natalia_Bol%C3%ADvar'},
+ {t:'La Natalia Bolívar que siempre recordaré (Cubanet)', u:'https://www.cubanet.org/la-natalia-bolivar-que-siempre-recordare/'},
+ {t:'Los orishas en Cuba, edición de La Habana, 1990 (ficha de Buscalibre)', u:'https://www.buscalibre.us/libro-los-orishas-en-cuba/5498164/p/5498164'}
 ];
 
 /* ---------- orishas ---------- */
@@ -110,6 +114,9 @@ var LECTURAS = [
  {autor:'Lydia Cabrera', obra:'El Monte', datos:'1954. Título completo: «El Monte: Igbo, Finda, Ewe Orisha, Vititi Nfinda».', f:[10,11,12,13],
   que:'Primer gran estudio etnográfico de las tradiciones afrocubanas: su religión, su magia y su herbolaria, es decir, las hierbas y plantas del monte. La autora (1899-1991) era cubana. Es una de las obras más influyentes en los estudios afrocubanos y se la ha llamado «la biblia negra» por haber servido de guía a muchas personas de la Regla de Ocha. Existe una primera traducción al inglés, «El Monte: Notes on the Religions, Magic, and Folklore of the Black and Creole People of Cuba» (688 páginas).',
   nota:'Tiene derechos de autor: esta web no reproduce su contenido. Tampoco indica para qué sirve cada planta ni cómo usarla, porque algunas son tóxicas y usarlas como remedio sin guía puede dañar la salud. Quien quiera aprender debe acudir al libro completo y a un practicante iniciado, y ante una enfermedad, a un médico. En la Regla de Ocha el dominio de las hierbas es de Osain, y en Palo Monte, de Gurunfinda (fuentes 1 y 8).'},
+ {autor:'Natalia Bolívar Aróstegui', obra:'Los orishas en Cuba', datos:'Primera edición: La Habana, Ediciones Unión, 1990 (193 páginas). Hay otras ediciones, como la de Ediciones Panapo, 1995.', f:[17,18,19,20],
+  que:'Libro sobre los orishas de la Regla de Ocha en Cuba. La autora (La Habana, 1934) fue etnóloga, pintora y escritora, especialista en religiones afrocubanas.',
+  nota:'Es una obra publicada en Cuba, y por eso puede servir para contrastar lo que dice esta página. Se ha dicho que se elaboró con santeros y babalawos, pero eso no se pudo comprobar en las fuentes consultadas, así que aquí no se afirma. Esta web no la usó como fuente ni reproduce su contenido, que tiene derechos de autor.'},
  {autor:'Wande Abimbola', obra:'Sixteen Great Poems of Ifá', datos:'UNESCO, Niamey, 1975.', f:[15],
   que:'Colección de poemas de Ifá. Su autor es un estudioso yoruba de Oyo, en Nigeria.'},
  {autor:'Wande Abimbola', obra:'Ifá: An Exposition of Ifá Literary Corpus', datos:'', f:[15],
