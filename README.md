@@ -19,7 +19,9 @@ Dominio previsto: **vantlygo.com** (pendiente de liberar/transferir a Vercel).
 - **Mi práctica:** hábitos con lunas de los últimos 14 días y diario. Se guarda solo en el dispositivo.
 - **App instalable:** manifiesto, iconos (normales y *maskable*), `sw.js` (funciona sin conexión), botón de instalar y guía para iPhone.
 
-## Estructura
+## Estructura del proyecto
+
+Esta carpeta es **autosuficiente e independiente de Puentes**: contiene la web, sus pruebas y las herramientas para generar los documentos de revisión.
 
     index.html · estilo.css · app.js     la portada y su lógica
     articulos.js                         los artículos (fuente única)
@@ -27,12 +29,32 @@ Dominio previsto: **vantlygo.com** (pendiente de liberar/transferir a Vercel).
     iching.js                            I Ching (datos, tirada e interfaz)
     capas.js                             interruptor de la capa Cuba
     cuba/ · cuba-datos.js · cuba.js      la capa Cuba (página, datos con fuentes, interfaz)
-    tools/generar.js                     genera articulos/*/index.html y sitemap.xml
     sw.js · manifest.webmanifest         la parte de app instalable
     icons/ · fuentes/                    logo (flor de loto) y tipografías (Marcellus, Hanken Grotesk)
     config.js                            datos de la comunidad (vacío = desactivada)
     supabase/comunidad.sql               tabla y reglas de las velas (NO aplicado)
     vercel.json · .vercelignore          despliegue
+    articulos/ · sitemap.xml             generados por tools/generar.js
+
+    tools/
+      generar.js                         genera articulos/*/index.html y sitemap.xml
+      pruebas/todas.sh                   ejecuta las 5 baterías de pruebas
+      vista_previa/construir.py          crea un único HTML con todo incrustado
+      revision_pdf/generar.sh            crea los PDF de revisión para practicantes
+    revision/                            PDF y vista previa generados (NO se publica; está en .gitignore)
+
+## Herramientas
+
+    bash tools/pruebas/todas.sh            # pruebas: motor, I Ching/árboles, portada, lecturas, capa Cuba
+    node tools/generar.js                  # tras tocar articulos.js
+    python3 tools/vista_previa/construir.py   # revision/anima_prueba.html
+    bash tools/revision_pdf/generar.sh        # revision/*.pdf
+
+Las pruebas necesitan Playwright (variables opcionales `PLAYWRIGHT` y `CHROMIUM`), y los PDF, `reportlab` y la fuente DejaVu Sans.
+
+## Descargar todo
+
+En GitHub: botón *Code* → *Download ZIP*, o `https://github.com/pelaoert-hub/Crecimiento-Interior/archive/refs/heads/main.zip`. La carpeta `revision/` no se publica: se regenera con las herramientas de arriba.
 
 ## Trabajar
 

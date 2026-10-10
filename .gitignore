@@ -1,2 +1,6 @@
 node_modules/
 .DS_Store
+# material de trabajo que no se publica
+revision/
+*.zip
+tools/revision_pdf/cuba.json
