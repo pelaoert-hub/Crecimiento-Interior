@@ -13,7 +13,14 @@ var FUENTES = [
  {t:'Ifá (Wikipedia en español)', u:'https://es.wikipedia.org/wiki/If%C3%A1'},
  {t:'Odù Ifá (Wikipedia en inglés)', u:'https://en.wikipedia.org/wiki/Od%C3%B9_If%C3%A1'},
  {t:'Palo (religión) (Wikipedia en español)', u:'https://es.wikipedia.org/wiki/Palo_(religi%C3%B3n)'},
- {t:'Cowrie-shell divination (Wikipedia en inglés)', u:'https://en.wikipedia.org/wiki/Cowrie-shell_divination'}
+ {t:'Cowrie-shell divination (Wikipedia en inglés)', u:'https://en.wikipedia.org/wiki/Cowrie-shell_divination'},
+ {t:'Lydia Cabrera (Wikipedia en inglés)', u:'https://en.wikipedia.org/wiki/Lydia_Cabrera'},
+ {t:'Lydia Cabrera (Encyclopaedia Britannica)', u:'https://www.britannica.com/biography/Lydia-Cabrera'},
+ {t:'Lydia Cabrera Papers (Universidad de Miami)', u:'https://digitalcollections.library.miami.edu/digital/collection/chc0339'},
+ {t:'The Study of Afro-Cuban Religions (Western Kentucky University)', u:'https://digitalcommons.wku.edu/context/stu_researcher/article/1004/viewcontent/finalversionThe_Study_of_Afro_Cuban_Religions_Historiography_finished.pdf'},
+ {t:'African cosmology of the Bântu-Kôngo (registro del Internet Archive)', u:'https://archive.org/details/africancosmology00kimb'},
+ {t:'Ifá Heritage University, Oyo & Prof. Wande Abimbola (UNILAG)', u:'https://unilaglss.wordpress.com/2013/08/31/ifa-heritage-university-oyo-prof-wande-abimbola/'},
+ {t:'From John S. Mbiti to Jacob K. Olupona (Cleveland State University)', u:'https://engagedscholarship.csuohio.edu/cgi/viewcontent.cgi?article=1070&context=jtb'}
 ];
 
 /* ---------- orishas ---------- */
@@ -97,5 +104,21 @@ var MPUNGOS = [
  {n:'Surumba Mukalla', ori:'Ochosi', santo:'', nota:'Dios de la caza y la guerra. Las fuentes no coinciden en su santo.'}
 ];
 
-raiz.CUBA = {FUENTES: FUENTES, ORISHAS: ORISHAS, LETRAS: LETRAS, MEJI: MEJI, MPUNGOS: MPUNGOS};
+
+/* ---------- obras para profundizar: solo se comprobo que existen y de que tratan; NO son fuente de los datos de arriba ---------- */
+var LECTURAS = [
+ {autor:'Lydia Cabrera', obra:'El Monte', datos:'1954. Título completo: «El Monte: Igbo, Finda, Ewe Orisha, Vititi Nfinda».', f:[10,11,12,13],
+  que:'Primer gran estudio etnográfico de las tradiciones afrocubanas: su religión, su magia y su herbolaria, es decir, las hierbas y plantas del monte. La autora (1899-1991) era cubana. Es una de las obras más influyentes en los estudios afrocubanos y se la ha llamado «la biblia negra» por haber servido de guía a muchas personas de la Regla de Ocha. Existe una primera traducción al inglés, «El Monte: Notes on the Religions, Magic, and Folklore of the Black and Creole People of Cuba» (688 páginas).',
+  nota:'Tiene derechos de autor: esta web no reproduce su contenido. Tampoco indica para qué sirve cada planta ni cómo usarla, porque algunas son tóxicas y usarlas como remedio sin guía puede dañar la salud. Quien quiera aprender debe acudir al libro completo y a un practicante iniciado, y ante una enfermedad, a un médico. En la Regla de Ocha el dominio de las hierbas es de Osain, y en Palo Monte, de Gurunfinda (fuentes 1 y 8).'},
+ {autor:'Wande Abimbola', obra:'Sixteen Great Poems of Ifá', datos:'UNESCO, Niamey, 1975.', f:[15],
+  que:'Colección de poemas de Ifá. Su autor es un estudioso yoruba de Oyo, en Nigeria.'},
+ {autor:'Wande Abimbola', obra:'Ifá: An Exposition of Ifá Literary Corpus', datos:'', f:[15],
+  que:'Estudio del corpus literario de Ifá, del mismo autor.'},
+ {autor:'E. Bolaji Idowu', obra:'Olódùmarè: God in Yoruba Belief', datos:'Longmans, Londres, 1962. Edición revisada y ampliada: Longman Nigeria, Lagos, 1996.', f:[16],
+  que:'Sobre la idea de Dios en la creencia yoruba.'},
+ {autor:'Fu-Kiau Bunseki', obra:'African Cosmology of the Bântu-Kôngo: Tying the Spiritual Knot', datos:'Athelia Henrietta Press. El autor nació en 1934.', f:[14],
+  que:'Sobre la cosmología del pueblo kongo, de donde viene Palo Monte (fuente 8).'}
+];
+
+raiz.CUBA = {LECTURAS: LECTURAS, FUENTES: FUENTES, ORISHAS: ORISHAS, LETRAS: LETRAS, MEJI: MEJI, MPUNGOS: MPUNGOS};
 })(typeof window !== 'undefined' ? window : globalThis);

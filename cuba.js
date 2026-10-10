@@ -10,7 +10,7 @@ function norm(s){ return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLo
 
 function html(){
   var h = '';
-  h += '<div class="cuba-nav" role="navigation" aria-label="Secciones de Cuba"><a href="#cuba-reglas">Reglas</a><a href="#cuba-orishas">Orishas</a><a href="#cuba-sinc">Sincretismo</a><a href="#cuba-diloggun">Diloggún</a><a href="#cuba-ifa">Ifá</a><a href="#cuba-palo">Palo Monte</a><a href="#cuba-fuentes">Fuentes</a></div>';
+  h += '<div class="cuba-nav" role="navigation" aria-label="Secciones de Cuba"><a href="#cuba-reglas">Reglas</a><a href="#cuba-orishas">Orishas</a><a href="#cuba-sinc">Sincretismo</a><a href="#cuba-diloggun">Diloggún</a><a href="#cuba-ifa">Ifá</a><a href="#cuba-palo">Palo Monte</a><a href="#cuba-leer">Para profundizar</a><a href="#cuba-fuentes">Fuentes</a></div>';
 
   h += '<section id="cuba-intro" class="cuba-sec"><div class="enc"><span class="etq">Capa Cuba</span><h2>Tradiciones afrocubanas</h2><p>Un resumen educativo de las religiones de raíz africana más presentes en Cuba, con sus orishas, sus santos católicos y sus formas de adivinación.</p></div>'+
     '<div class="aviso"><b>Antes de leer.</b> Esto es información cultural, no una consulta ni una ceremonia, y no sustituye a un santero, un babalawo o un palero iniciado. Son tradiciones orales: su conocimiento se transmite de forma directa, por iniciación, de maestro a discípulo, y no existe un texto único que lo recoja. Lo que se muestra aquí es solo lo que se ha publicado en fuentes públicas, y cada dato indica cuál. Lo que aparece en una sola fuente se marca así, y lo que las fuentes contradicen se avisa o se omite. Puede haber diferencias con lo que enseña cada casa. Está pendiente de revisión por practicantes de estas religiones, y se agradecen sus correcciones.</div></section>';
@@ -43,6 +43,8 @@ function html(){
     '<div class="vidrio tile" style="max-width:760px;margin:0 auto 16px"><p>Es una religión afroamericana, politeísta, sincrética y animista, derivada de la religión kongo y mezclada en Cuba con el espiritismo. Su dios alto es Nzambi, y trabaja con deidades llamadas <i>mpungu</i> y con los espíritus de los muertos. '+refs([8])+'</p>'+
     '<h3 style="margin-top:14px">Cómo ven las cosas</h3><p>La fuente 8 menciona dos métodos: el <i>vititi mensu</i>, que consiste en mirar en un cuerno de un animal sacralizado tapado con un espejo, y los <i>chamalongos</i>, conchas de coco que se lanzan y cuya caída expresaría la respuesta del muerto. La fuente 1 añade que los mayomberos usan el coco para saber si su nganga (el caldero sagrado) está satisfecha. '+refs([8,1])+'</p><p class="nota">Las fuentes consultadas no detallan cómo se interpretan, y esta web no lo inventa.</p></div>'+
     '<div class="cuba-grid" id="cuba-mpungos"></div></section>';
+
+  h += '<section id="cuba-leer" class="cuba-sec"><div class="enc"><h2>Para profundizar</h2><p>Obras que se pueden consultar. Estas religiones son de tradición oral, pero hay estudios escritos, algunos hechos desde África y desde la propia Cuba. De cada una solo se comprobó que existe y de qué trata. <b>No se usaron como fuente de los datos de esta página</b> y no se reproduce su contenido.</p></div><div class="cuba-grid" id="cuba-lecturas"></div></section>';
 
   h += '<section id="cuba-fuentes" class="cuba-sec"><div class="enc"><h2>Fuentes públicas</h2><p>De dónde sale cada dato. Se consultaron el 10 de octubre de 2026.</p></div><ol class="cuba-fuentes" id="cuba-flist"></ol>'+
     '<div class="aviso"><b>Qué se hizo y qué no.</b> Los datos se contrastaron entre estas páginas, que son de acceso público: un texto de la Hispano Cubano, Wikipedia, EcuRed, un museo universitario y una página de investigación sobre Osha-Ifá. Que varias coincidan no significa que lo confirme la propia tradición, que es oral: solo un practicante iniciado puede confirmarlo. No se consultó a practicantes ni se usó ningún conocimiento reservado de las casas. Los fragmentos entre comillas del diloggún son literales de la fuente 5. Las preguntas para pensar son de Ánima y no pertenecen a la tradición. Donde las fuentes se contradicen (el santo de Ochosi, Osun u Osain, algunos colores y fechas), se avisa o se deja fuera.</div></section>';
@@ -81,6 +83,9 @@ function render(root){
   }).join('');
   root.querySelector('#cuba-mpungos').innerHTML = CUBA.MPUNGOS.map(function(m){
     return '<div class="vidrio tile cuba-card"><h3>'+esc(m.n)+'</h3><dl><dt>Equivale al orisha</dt><dd>'+esc(m.ori)+'</dd>'+(m.santo ? '<dt>Santo católico</dt><dd>'+esc(m.santo)+'</dd>' : '')+'</dl>'+(m.nota ? '<p class="nota">'+esc(m.nota)+'</p>' : '')+'</div>';
+  }).join('');
+  root.querySelector('#cuba-lecturas').innerHTML = CUBA.LECTURAS.map(function(l){
+    return '<article class="vidrio tile cuba-card"><h3>'+esc(l.obra)+'</h3><p class="nota">'+esc(l.autor)+(l.datos ? ' · '+esc(l.datos) : '')+'</p><p>'+esc(l.que)+'</p>'+(l.nota ? '<p class="aviso" style="margin:6px 0 0">'+esc(l.nota)+'</p>' : '')+'<p class="nota">Fuentes: '+refs(l.f)+'</p></article>';
   }).join('');
   root.querySelector('#cuba-flist').innerHTML = CUBA.FUENTES.slice(1).map(function(f){ return '<li><a href="'+esc(f.u)+'" target="_blank" rel="noopener noreferrer">'+esc(f.t)+'</a></li>'; }).join('');
   var box = root.querySelector('#cuba-letras'), det = root.querySelector('#cuba-letra');

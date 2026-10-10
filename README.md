@@ -68,6 +68,10 @@ Cada dato de `cuba-datos.js` lleva los números de las fuentes públicas (lista 
 - Las fuentes son divulgativas y públicas. **No se ha consultado a practicantes.** La página está marcada `noindex` y pendiente de revisión por santeros, babalawos y paleros antes de publicarse.
 - Todas las páginas se consultaron el 10 de octubre de 2026. Si cambian, hay que recomprobar.
 
+### Obras para profundizar
+
+La capa Cuba incluye una sección «Para profundizar» con obras escritas (Lydia Cabrera, *El Monte*; Wande Abimbola; E. Bolaji Idowu; Fu-Kiau Bunseki). **Solo se comprobó que existen y de qué tratan; no se usaron como fuente de los datos ni se reproduce su contenido.** *El Monte* tiene derechos de autor, y la web no indica usos de las plantas porque algunas son tóxicas y usarlas como remedio sin guía puede dañar la salud.
+
 ## Reglas de contenido
 
 - Nada se presenta como verificado si no lo está. Lo que escribe la comunidad se marca como aporte de la comunidad.
