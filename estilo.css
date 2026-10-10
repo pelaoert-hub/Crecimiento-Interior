@@ -108,6 +108,31 @@ label{display:block;font:600 .85rem var(--texto);color:var(--suave);margin-top:1
 .suelta .vuela{position:absolute;inset:0;padding:12px 14px;border-radius:14px;text-align:left;white-space:pre-wrap;word-break:break-word;pointer-events:none;color:var(--luz);animation:disuelve 5s ease-in forwards}
 @keyframes disuelve{0%{opacity:1;transform:none;filter:blur(0)}100%{opacity:0;transform:translateY(-90px) scale(1.04);filter:blur(14px)}}
 
+/* lecturas */
+.lec-aviso{max-width:760px;margin:0 auto 22px;font-size:.92rem}
+.lec-form{max-width:560px;margin:0 auto 30px}
+.lec-form label{margin-top:12px}
+.lec-check{display:flex!important;align-items:center;gap:10px;color:var(--luz)!important;font-weight:400!important;margin:16px 0 4px}
+.lec-check input{width:auto;margin:0;accent-color:var(--violeta)}
+.lec-palma{margin-top:14px;border:1px solid var(--borde);border-radius:14px;padding:12px 16px}
+.lec-palma summary{cursor:pointer;font-weight:600;color:var(--violeta)}
+.lec-resumen{text-align:center;margin-bottom:10px}
+.lec-resumen h3{font-size:1.7rem;margin-bottom:12px}
+.lec-cuerpo{align-items:start;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:18px}
+.lec-card,.lec-coin{padding:22px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.lec-card header{display:flex;gap:14px;align-items:center}
+.lec-simb{width:46px;height:46px;border-radius:50%;border:1px solid var(--borde);display:grid;place-items:center;font:400 1.4rem var(--titulo);color:var(--rosa);flex:none}
+.lec-card h4{margin:0;font:400 1.25rem var(--titulo);letter-spacing:.04em}
+.lec-card small{color:var(--suave);font-size:.75rem;letter-spacing:.04em}
+.lec-item b{display:block;font-weight:600;color:var(--luz)}
+.lec-item p{color:var(--suave);font-size:.95rem}
+.lec-q{color:var(--rosa);font-size:.92rem;font-style:italic}
+.lec-nota{color:var(--suave);font-size:.8rem;border-top:1px solid var(--borde);padding-top:10px}
+.lec-coin{grid-column:1/-1}
+.lec-coin h3{font-size:1.4rem}
+.lec-coin ul{margin:0;padding-left:1.1em;color:var(--suave)}
+.lec-coin li b{color:var(--luz)}
+
 /* tradiciones */
 .trad{display:flex;flex-direction:column;gap:10px;max-width:720px;margin:0 auto}
 .trad details{padding:0}

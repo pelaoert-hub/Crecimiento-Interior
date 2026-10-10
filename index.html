@@ -26,7 +26,7 @@
 
 <nav class="menu" id="menu" aria-label="Principal" aria-hidden="true">
   <button class="btn-menu cerrar" id="cerrar-menu" type="button">Cerrar</button>
-  <a href="#hoy">Hoy</a><a href="#practicas">Prácticas</a><a href="#tradiciones">Tradiciones</a><a href="#biblioteca">Biblioteca</a><a href="#velas">Velas</a><a href="#mi-practica">Mi práctica</a><a href="#instalar">Instalar</a>
+  <a href="#hoy">Hoy</a><a href="#practicas">Prácticas</a><a href="#lecturas">Lecturas</a><a href="#tradiciones">Tradiciones</a><a href="#biblioteca">Biblioteca</a><a href="#velas">Velas</a><a href="#mi-practica">Mi práctica</a><a href="#instalar">Instalar</a>
 </nav>
 
 <main>
@@ -73,6 +73,43 @@
   <button class="vidrio prac" type="button" data-abrir="gratitud"><svg viewBox="0 0 48 48"><path d="M24 40S8 31 8 19a8 8 0 0 1 16-2 8 8 0 0 1 16 2c0 12-16 21-16 21Z"/></svg><h3>Gratitud</h3><p>Tres cosas de hoy por las que dar las gracias.</p><span class="dur">2 minutos</span></button>
   <button class="vidrio prac" type="button" data-abrir="soltar"><svg viewBox="0 0 48 48"><path d="M14 38c-6 0-8-8-3-11 0-8 10-11 15-6 6-3 12 2 10 8 5 2 4 9-2 9"/><path d="M24 44V26M19 31l5-5 5 5"/></svg><h3>Soltar</h3><p>Escribe lo que pesa y míralo disolverse. Nada se guarda.</p><span class="dur">2 minutos</span></button>
   <button class="vidrio prac" type="button" data-abrir="examen"><svg viewBox="0 0 48 48"><path d="M10 8h28v32H10z"/><path d="M16 17h16M16 24h16M16 31h9"/></svg><h3>Examen del día</h3><p>Repasar con honestidad a quién ayudaste y a quién pudiste herir.</p><span class="dur">5 minutos</span></button>
+</div></section>
+
+<section id="lecturas"><div class="ancho">
+  <div class="enc aparece"><span class="etq">Miradas antiguas</span><h2>Lecturas</h2><p>Qué dicen varias tradiciones sobre tu fecha de nacimiento, reunidas en un solo lugar y cruzadas entre sí.</p></div>
+  <div class="aviso lec-aviso"><b>Léelo con calma.</b> Esto es una mirada simbólica basada en tradiciones antiguas: astrología, numerología, cábala, tarot y quiromancia. No es una predicción ni un hecho comprobado, y no sustituye consejo médico, psicológico, económico ni legal. No tomes decisiones importantes por lo que diga. Tus datos se calculan en tu propio dispositivo y no se envían a ningún sitio.</div>
+  <form class="vidrio tile lec-form" id="lec-form" novalidate>
+    <label for="lec-nombre" style="margin-top:0">Tu nombre completo <span class="nota">(opcional, solo para la numerología)</span></label>
+    <input id="lec-nombre" maxlength="80" autocomplete="name">
+    <label for="lec-fecha">Fecha de nacimiento</label>
+    <input id="lec-fecha" type="date" required>
+    <label for="lec-hora">Hora de nacimiento <span class="nota">(opcional; mejora el cálculo de la Luna)</span></label>
+    <input id="lec-hora" type="time">
+    <label for="lec-tz">Zona horaria del lugar de nacimiento</label>
+    <select id="lec-tz"></select>
+    <details class="lec-palma"><summary>Quiromancia (opcional)</summary>
+      <p class="nota">Mira la palma de tu mano dominante y elige lo que más se parezca. Si no estás seguro, déjalo como está.</p>
+      <label for="lec-corazon">Línea del corazón (la de arriba)</label>
+      <select id="lec-corazon"><option value="">No lo sé</option><option value="curva">Curva, sube hacia los dedos</option><option value="recta">Recta, casi horizontal</option></select>
+      <label for="lec-cabeza">Línea de la cabeza (la del medio)</label>
+      <select id="lec-cabeza"><option value="">No lo sé</option><option value="recta">Recta, cruza la palma</option><option value="curva">Curva, baja hacia la muñeca</option></select>
+      <label for="lec-vida">Línea de la vida (rodea el pulgar)</label>
+      <select id="lec-vida"><option value="">No lo sé</option><option value="amplia">Amplia y curva</option><option value="cerrada">Pegada al pulgar</option></select>
+    </details>
+    <label class="lec-check"><input type="checkbox" id="lec-recordar"> Recordar mis datos en este dispositivo</label>
+    <div class="botones" style="justify-content:flex-start"><button class="boton lleno" type="submit">Ver mi lectura</button><button class="boton" type="button" id="lec-borrar">Borrar mis datos</button></div>
+    <p class="nota" id="lec-error" role="alert"></p>
+  </form>
+  <div id="lec-resultado" hidden>
+    <div id="lec-resumen" class="lec-resumen"></div>
+    <div class="selector" id="lec-tabs" role="tablist" aria-label="Periodo de la lectura">
+      <button class="chip" role="tab" data-t="nacimiento" aria-selected="true" type="button">Tu base</button>
+      <button class="chip" role="tab" data-t="hoy" aria-selected="false" type="button">Hoy</button>
+      <button class="chip" role="tab" data-t="mes" aria-selected="false" type="button">Este mes</button>
+      <button class="chip" role="tab" data-t="ano" aria-selected="false" type="button">Este año</button>
+    </div>
+    <div class="lec-cuerpo" id="lec-cuerpo"></div>
+  </div>
 </div></section>
 
 <section id="tradiciones"><div class="ancho">
@@ -179,5 +216,7 @@
 <script src="/config.js"></script>
 <script src="/articulos.js"></script>
 <script src="/app.js"></script>
+<script src="/lecturas.js"></script>
+<script src="/lecturas-ui.js"></script>
 </body>
 </html>
