@@ -3,7 +3,7 @@
 const fs = require('fs'), path = require('path');
 const raiz = path.join(__dirname, '..');
 require(path.join(raiz, 'articulos.js'));
-const A = globalThis.ARTICULOS, SITIO = 'https://vantlygo.com', NOMBRE = 'Ánima';
+const A = globalThis.ARTICULOS, SITIO = 'https://animaquieta.app', NOMBRE = 'Ánima';
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 A.forEach((a, i) => {

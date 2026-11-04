@@ -2,7 +2,7 @@
 
 Web de silencio, conciencia y espiritualidad, instalable en el móvil como app (PWA). Sitio estático: HTML, CSS y JavaScript, sin dependencias ni CDN (las tipografías están en `fuentes/`).
 
-Dominio previsto: **vantlygo.com** (pendiente de liberar/transferir a Vercel).
+Dominio: **animaquieta.app** (registrado en Vercel).
 
 ## Qué tiene
 
@@ -63,10 +63,10 @@ En GitHub: botón *Code* → *Download ZIP*, o `https://github.com/pelaoert-hub/
 
 Al cambiar archivos de la web, **subir `VERSION` en `sw.js`** para que los móviles reciban la versión nueva.
 
-## Publicar en vantlygo.com
+## Publicar en animaquieta.app
 
 1. Proyecto nuevo en Vercel con este repositorio (sin comando de construcción; ya viene en `vercel.json`).
-2. Settings → Domains → añadir `vantlygo.com`.
+2. Settings → Domains → añadir `animaquieta.app`.
 3. Velas: crear un proyecto de Supabase propio, aplicar `supabase/comunidad.sql` y rellenar `config.js`. Los mensajes se aprueban a mano en el panel.
 4. Revisar los artículos y las tradiciones; quitar `borrador: true`; luego `node tools/generar.js`. Los borradores llevan `noindex` y no están en el sitemap.
 5. Comprobar en el dominio real: que cargue, que se pueda instalar y que `robots.txt` y `sitemap.xml` respondan.
