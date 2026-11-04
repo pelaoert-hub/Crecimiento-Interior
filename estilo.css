@@ -186,6 +186,8 @@ label{display:block;font:600 .85rem var(--texto);color:var(--suave);margin-top:1
 .pasos h3{font-size:1.1rem;margin-bottom:6px}
 .pasos p{color:var(--suave);font-size:.92rem}
 footer{border-top:1px solid var(--borde);padding:30px 0 40px;text-align:center;color:var(--suave);font-size:.85rem}
+.pie-enlaces{margin-top:6px}.pie-enlaces a{display:inline-block;padding:8px 12px}
+.com-avisos{max-width:560px;margin:0 auto 18px}.com-avisos .aviso{margin:0 0 10px;max-width:none}.com-avisos .nota{margin:0;text-align:center}
 
 /* articulo */
 .pagina-articulo .cab{position:relative}

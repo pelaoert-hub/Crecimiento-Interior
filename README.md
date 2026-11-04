@@ -15,7 +15,8 @@ Dominio: **animaquieta.app** (registrado en Vercel).
 - **Cinco salas de práctica:** respirar (loto que se abre, patrones calma y caja), silencio (temporizador con cuenco), gratitud, soltar (el texto se disuelve y no se guarda) y examen del día.
 - **Tradiciones:** zazen, lectio divina, metta y examen de conciencia, en resumen general (revisadas, según indicó el autor).
 - **Biblioteca:** 9 artículos, con página propia en `/articulos/<id>/`.
-- **Velas (comunidad)** con moderación previa; desactivada hasta conectar Supabase.
+- **Velas (comunidad)** con moderación previa. Los textos de aviso ya están en la portada (apodo en vez de nombre completo, nada de datos de salud de otras personas, revisión «cada pocos días», aviso de crisis sin teléfonos y enlace a Privacidad). **Todavía no están conectadas**: siguen desactivadas hasta crear el proyecto de Supabase y rellenar `config.js` (ver «Publicar en animaquieta.app»).
+- **Privacidad** (`/privacidad/`): resumen en lenguaje sencillo de qué datos recoge Ánima. Casi todo se queda en el navegador; las velas son la única excepción (apodo, texto y fecha en Supabase, UE). Contacto para retirar una vela: pelaoert@gmail.com, visible en la web por decisión expresa del autor. Sin plazo de conservación inventado: se conservan hasta que se retiren a petición.
 - **Mi práctica:** hábitos con lunas de los últimos 14 días y diario. Se guarda solo en el dispositivo.
 - **App instalable:** manifiesto, iconos (normales y *maskable*), `sw.js` (funciona sin conexión), botón de instalar y guía para iPhone.
 
@@ -29,6 +30,7 @@ Esta carpeta es **autosuficiente e independiente de Puentes**: contiene la web, 
     iching.js                            I Ching (datos, tirada e interfaz)
     capas.js                             interruptor de la capa Cuba
     cuba/ · cuba-datos.js · cuba.js      la capa Cuba (página, datos con fuentes, interfaz)
+    privacidad/                          página de privacidad (a mano; está en el sitemap y en el precaché de sw.js)
     sw.js · manifest.webmanifest         la parte de app instalable
     icons/ · fuentes/                    logo (flor de loto) y tipografías (Marcellus, Hanken Grotesk)
     config.js                            datos de la comunidad (vacío = desactivada)
@@ -80,7 +82,7 @@ Ahora mismo **la capa Cuba y los 9 artículos están visibles** en la web public
 
 1. Proyecto nuevo en Vercel con este repositorio (sin comando de construcción; ya viene en `vercel.json`).
 2. Settings → Domains → añadir `animaquieta.app`.
-3. Velas: crear un proyecto de Supabase propio, aplicar `supabase/comunidad.sql` y rellenar `config.js`. Los mensajes se aprueban a mano en el panel.
+3. Velas: crear un proyecto de Supabase propio, aplicar `supabase/comunidad.sql` y rellenar `config.js`. Los mensajes se aprueban a mano en el panel. Antes de activarlas, comprobar que `/privacidad/` sigue siendo verdad: que el proyecto de Supabase esté de verdad en la Unión Europea, que el correo de contacto funcione y que se revisen las velas «cada pocos días», como dice la web. Si algo cambia, corregir también esa página.
 4. Revisar los artículos y las tradiciones; quitar `borrador: true`; luego `node tools/generar.js`. Los borradores llevan `noindex` y no están en el sitemap.
 5. Comprobar en el dominio real: que cargue, que se pueda instalar y que `robots.txt` y `sitemap.xml` respondan.
 

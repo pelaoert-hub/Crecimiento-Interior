@@ -56,7 +56,7 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch
   fs.writeFileSync(path.join(raiz, 'articulos', a.id, 'index.html'), html);
 });
 
-// sitemap: portada, capa Cuba y solo lo revisado (los borradores llevan noindex y no se listan)
-const urls = [SITIO + '/', SITIO + '/cuba/'].concat(A.filter(a => !a.borrador).map(a => SITIO + '/articulos/' + a.id + '/'));
+// sitemap: portada, capa Cuba, privacidad y solo lo revisado (los borradores llevan noindex y no se listan)
+const urls = [SITIO + '/', SITIO + '/cuba/', SITIO + '/privacidad/'].concat(A.filter(a => !a.borrador).map(a => SITIO + '/articulos/' + a.id + '/'));
 fs.writeFileSync(path.join(raiz, 'sitemap.xml'), '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls.map(u => '  <url><loc>' + u + '</loc></url>').join('\n') + '\n</urlset>\n');
 console.log('generados', A.length, 'articulos;', urls.length, 'url en el sitemap');
