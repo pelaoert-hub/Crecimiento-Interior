@@ -15,7 +15,11 @@ Dominio: **animaquieta.app** (registrado en Vercel).
 - **Cinco salas de práctica:** respirar (loto que se abre, patrones calma y caja), silencio (temporizador con cuenco), gratitud, soltar (el texto se disuelve y no se guarda) y examen del día.
 - **Tradiciones:** zazen, lectio divina, metta y examen de conciencia, en resumen general (revisadas, según indicó el autor).
 - **Biblioteca:** 9 artículos, con página propia en `/articulos/<id>/`.
-- **Velas (comunidad)** con moderación previa. Los textos de aviso ya están en la portada (apodo en vez de nombre completo, nada de datos de salud de otras personas, revisión «cada pocos días», aviso de crisis sin teléfonos y enlace a Privacidad). **Todavía no están conectadas**: siguen desactivadas hasta crear el proyecto de Supabase y rellenar `config.js` (ver «Publicar en animaquieta.app»).
+- **Velas (comunidad)** con moderación previa. Los textos de aviso ya están en la portada (apodo en vez de nombre completo, nada de datos de salud de otras personas, revisión «cada pocos días», aviso de crisis sin teléfonos y enlace a Privacidad). **Están conectadas** a un proyecto de Supabase propio de Ánima (`anima`, región UE `eu-central-1`, separado del de Puentes) mediante `config.js` (URL y clave publicable, pública por diseño; la seguridad la ponen las reglas del SQL).
+  - **Moderar:** panel de Supabase → Table Editor → `comunidad_mensajes`. Marcar `aprobado` publica la vela; borrar la fila la rechaza. La consulta de pendientes está en los comentarios de `supabase/comunidad.sql`.
+  - **Apagarlas:** vaciar `url` y `clavePublica` en `config.js` y subir `VERSION` en `sw.js` para que se actualice la copia sin conexión. La web vuelve a mostrar que las velas no están disponibles.
+  - **Nota sobre el SQL:** el aplicado en el proyecto incluye, además de la tabla y las dos reglas originales, permisos mínimos para `anon` (solo `INSERT` de nombre y texto, y `SELECT` de las aprobadas), dos comprobaciones de que nombre y texto no estén vacíos y un índice para la lista pública. Ese SQL es el que está en `supabase/comunidad.sql`.
+  - **Pendiente:** no hay límite contra el envío masivo (spam); la moderación previa evita que se publique, pero no que lleguen filas.
 - **Privacidad** (`/privacidad/`): resumen en lenguaje sencillo de qué datos recoge Ánima. Casi todo se queda en el navegador; las velas son la única excepción (apodo, texto y fecha en Supabase, UE). Contacto para retirar una vela: pelaoert@gmail.com, visible en la web por decisión expresa del autor. Sin plazo de conservación inventado: se conservan hasta que se retiren a petición.
 - **Mi práctica:** hábitos con lunas de los últimos 14 días y diario. Se guarda solo en el dispositivo.
 - **App instalable:** manifiesto, iconos (normales y *maskable*), `sw.js` (funciona sin conexión), botón de instalar y guía para iPhone.
@@ -34,7 +38,7 @@ Esta carpeta es **autosuficiente e independiente de Puentes**: contiene la web, 
     sw.js · manifest.webmanifest         la parte de app instalable
     icons/ · fuentes/                    logo (flor de loto) y tipografías (Marcellus, Hanken Grotesk)
     config.js                            datos de la comunidad (vacío = desactivada)
-    supabase/comunidad.sql               tabla y reglas de las velas (NO aplicado)
+    supabase/comunidad.sql               tabla y reglas de las velas (aplicado en el proyecto «anima»)
     vercel.json · .vercelignore          despliegue
     articulos/ · sitemap.xml             generados por tools/generar.js
 
@@ -82,7 +86,7 @@ Ahora mismo **la capa Cuba y los 9 artículos están visibles** en la web public
 
 1. Proyecto nuevo en Vercel con este repositorio (sin comando de construcción; ya viene en `vercel.json`).
 2. Settings → Domains → añadir `animaquieta.app`.
-3. Velas: crear un proyecto de Supabase propio, aplicar `supabase/comunidad.sql` y rellenar `config.js`. Los mensajes se aprueban a mano en el panel. Antes de activarlas, comprobar que `/privacidad/` sigue siendo verdad: que el proyecto de Supabase esté de verdad en la Unión Europea, que el correo de contacto funcione y que se revisen las velas «cada pocos días», como dice la web. Si algo cambia, corregir también esa página.
+3. Velas: ya hay un proyecto de Supabase propio (`anima`), con `supabase/comunidad.sql` aplicado y `config.js` rellenado. Los mensajes se aprueban a mano en el panel. Comprobar de vez en cuando que se siguen revisando: la web promete «cada pocos días». Antes de publicar, comprobar que `/privacidad/` sigue siendo verdad: que el proyecto de Supabase esté de verdad en la Unión Europea, que el correo de contacto funcione y que se revisen las velas «cada pocos días», como dice la web. Si algo cambia, corregir también esa página.
 4. Revisar los artículos y las tradiciones; quitar `borrador: true`; luego `node tools/generar.js`. Los borradores llevan `noindex` y no están en el sitemap.
 5. Comprobar en el dominio real: que cargue, que se pueda instalar y que `robots.txt` y `sitemap.xml` respondan.
 

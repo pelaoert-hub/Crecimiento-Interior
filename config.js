@@ -1,6 +1,6 @@
 // datos de conexion de la comunidad; vacio = la comunidad queda desactivada
 // la clave "anon" es publica por diseno, pero la seguridad la ponen las reglas del SQL
-window.CONFIG_COMUNIDAD = { url: '', clavePublica: '' };
+window.CONFIG_COMUNIDAD = { url: 'https://vxnaztujvdbhbgherpoa.supabase.co', clavePublica: 'sb_publishable_VOxGQkz0kC6G6shMdmt-bA_5OwvRAuk' };
 
 // INTERRUPTORES DE PUBLICACION (este es el unico sitio donde se cambian)
 // false = la app no muestra ese contenido (ni entradas, ni enlaces, ni menu).
