@@ -100,7 +100,7 @@ Cada dato de `cuba-datos.js` lleva los números de las fuentes públicas (lista 
 - Lo que aparece en **una sola fuente** se marca así. Lo que las fuentes **contradicen** (el santo de Ochosi, Osun u Osain; algunos colores; la fecha de Elegguá, que una fuente da como 3 de junio) se avisa o se deja fuera.
 - Los fragmentos del diloggún entre comillas son literales de la fuente 5 (Proyecto Orunmila). Los orishas que hablan en cada letra son de la fuente 4 (EcuRed). Las preguntas «para pensar» son de Ánima y no pertenecen a la tradición.
 - Las letras 13 a 16 solo las leen los babalawos, según la fuente 4; no se muestra lectura. Ifá no se simula.
-- Las fuentes son divulgativas y públicas. **No se ha consultado a practicantes.** La página fue revisada por el autor y se publicó sin la marca `noindex`.
+- Las fuentes son divulgativas y públicas. **Revisada por practicantes (según indicó el autor).** Las prácticas y su interpretación varían según la región de Cuba: lo recogido es una versión general y hay variantes regionales. La página se publicó sin la marca `noindex`.
 - Todas las páginas se consultaron el 10 de octubre de 2026. Si cambian, hay que recomprobar.
 
 ### Obras para profundizar
