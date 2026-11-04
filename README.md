@@ -14,7 +14,7 @@ Dominio: **animaquieta.app** (registrado en Vercel).
 - **Capa Cuba** (`/cuba/`): tradiciones afrocubanas. Se activa con un interruptor en el menú; si el dispositivo tiene la zona horaria de La Habana, se sugiere una sola vez. Incluye 20 orishas con su santo católico, el sincretismo, el diloggún (letras, orishas que hablan en cada una, tirada simbólica), Ifá (los 16 odu mayores y el tablero) y Palo Monte (mpungos y métodos de adivinación). Cada dato indica su fuente.
 - **Cinco salas de práctica:** respirar (loto que se abre, patrones calma y caja), silencio (temporizador con cuenco), gratitud, soltar (el texto se disuelve y no se guarda) y examen del día.
 - **Tradiciones:** zazen, lectio divina, metta y examen de conciencia, en resumen general (en revisión).
-- **Biblioteca:** 9 artículos en borrador, con página propia en `/articulos/<id>/`.
+- **Biblioteca:** 9 artículos, con página propia en `/articulos/<id>/`.
 - **Velas (comunidad)** con moderación previa; desactivada hasta conectar Supabase.
 - **Mi práctica:** hábitos con lunas de los últimos 14 días y diario. Se guarda solo en el dispositivo.
 - **App instalable:** manifiesto, iconos (normales y *maskable*), `sw.js` (funciona sin conexión), botón de instalar y guía para iPhone.
@@ -63,20 +63,18 @@ En GitHub: botón *Code* → *Download ZIP*, o `https://github.com/pelaoert-hub/
 
 Al cambiar archivos de la web, **subir `VERSION` en `sw.js`** para que los móviles reciban la versión nueva.
 
-## Ocultar y mostrar (capa Cuba y artículos en borrador)
+## Ocultar y mostrar (capa Cuba y artículos)
 
-Ahora mismo **la capa Cuba y los 9 artículos en borrador están ocultos** en la web publicada. El contenido sigue en el repositorio (`cuba/`, `cuba-datos.js`, `cuba.js`, `articulos/`, `articulos.js`); solo se ha dejado de mostrar. Pasan dos cosas:
+Ahora mismo **la capa Cuba y los 9 artículos están visibles** en la web publicada, sin la marca `noindex` y sin la etiqueta de borrador, y el `sitemap.xml` incluye `/cuba/` y los 9 artículos. Antes estuvieron ocultos; el contenido nunca se borró (`cuba/`, `cuba-datos.js`, `cuba.js`, `articulos/`, `articulos.js`). Ocultar o mostrar depende de dos cosas:
 
-- **La app** deja de mostrarlos según dos interruptores al final de `config.js`: `MOSTRAR_CAPA_CUBA` y `MOSTRAR_BORRADORES` (ahora, `false`). Con `false` desaparecen el interruptor y el aviso de la capa Cuba, su sección, su enlace del menú, la sección Biblioteca y el enlace al artículo de metta.
-- **Vercel** no publica las páginas, porque `.vercelignore` lista `cuba`, `cuba-datos.js`, `cuba.js` y `articulos`. Por eso `/cuba/` y `/articulos/<id>/` responden 404.
+- **La app** lo decide con dos interruptores al final de `config.js`: `MOSTRAR_CAPA_CUBA` (ahora, `true`) y `MOSTRAR_BORRADORES` (ahora, `false`, que solo afecta a artículos con `borrador: true`; hoy no hay ninguno). Con `MOSTRAR_CAPA_CUBA = false` desaparecen el interruptor y el aviso de la capa Cuba, su sección y su enlace del menú. Con la lista de artículos vacía (o todos en borrador y `MOSTRAR_BORRADORES = false`) desaparecen la sección Biblioteca y el enlace al artículo de metta.
+- **Vercel** publica lo que `.vercelignore` no lista. Hoy solo ignora `tools`, `supabase`, `README.md` y `.gitignore`. Si se añaden `cuba`, `cuba-datos.js`, `cuba.js` o `articulos`, esas rutas responden 404.
 
-Los textos de los borradores siguen siendo accesibles en `/articulos.js` (la app lo carga y filtra); lo que no hay es ninguna página ni enlace que los muestre.
+**Para ocultar otra vez la capa Cuba:** en `config.js` poner `MOSTRAR_CAPA_CUBA = false`; en `.vercelignore` añadir `cuba`, `cuba-datos.js` y `cuba.js`; en `sw.js` quitar `'/cuba/'`, `'/cuba-datos.js'` y `'/cuba.js'` de `CASCARON` (si no, la instalación del service worker falla con 404) y subir `VERSION`; en `tools/generar.js` quitar `/cuba/` del sitemap y volver a ejecutarlo.
 
-**Para volver a mostrar la capa Cuba:** en `config.js` poner `MOSTRAR_CAPA_CUBA = true`; en `.vercelignore` quitar `cuba`, `cuba-datos.js` y `cuba.js`; en `sw.js` volver a poner `'/cuba/'`, `'/cuba-datos.js'` y `'/cuba.js'` en `CASCARON` y subir `VERSION`.
+**Para ocultar otra vez los artículos:** poner `borrador: true` en los que se quiera ocultar y ejecutar `node tools/generar.js` (esas páginas vuelven a llevar `noindex` y salen del sitemap); con `MOSTRAR_BORRADORES = false` la app no los lista. Si además no deben publicarse sus páginas, añadir `articulos` a `.vercelignore`. Subir `VERSION` en `sw.js` en cualquier caso.
 
-**Para volver a mostrar los artículos:** quitar `borrador: true` de los ya revisados (y `node tools/generar.js`), o poner `MOSTRAR_BORRADORES = true` para ver todos; en `.vercelignore` quitar `articulos`; subir `VERSION` en `sw.js`. Si se vuelve a poner la lista de artículos, el sitemap solo incluye los que ya no son borrador.
-
-**Aviso para las pruebas:** con los interruptores en `false`, `tools/pruebas/cuba_capas.js` y las partes de `portada.js` que miran la Biblioteca y `/articulos/` fallan a propósito. Para ejecutarlas, poner temporalmente los dos interruptores en `true` (las páginas existen en el repositorio).
+**Aviso para las pruebas:** con la capa Cuba y la Biblioteca visibles, `tools/pruebas/cuba_capas.js` y las partes de `portada.js` que miran la Biblioteca y `/articulos/` deben pasar. Si se vuelve a ocultar algo, fallarán a propósito hasta restablecerlo.
 
 ## Publicar en animaquieta.app
 
@@ -102,7 +100,7 @@ Cada dato de `cuba-datos.js` lleva los números de las fuentes públicas (lista 
 - Lo que aparece en **una sola fuente** se marca así. Lo que las fuentes **contradicen** (el santo de Ochosi, Osun u Osain; algunos colores; la fecha de Elegguá, que una fuente da como 3 de junio) se avisa o se deja fuera.
 - Los fragmentos del diloggún entre comillas son literales de la fuente 5 (Proyecto Orunmila). Los orishas que hablan en cada letra son de la fuente 4 (EcuRed). Las preguntas «para pensar» son de Ánima y no pertenecen a la tradición.
 - Las letras 13 a 16 solo las leen los babalawos, según la fuente 4; no se muestra lectura. Ifá no se simula.
-- Las fuentes son divulgativas y públicas. **No se ha consultado a practicantes.** La página está marcada `noindex` y pendiente de revisión por santeros, babalawos y paleros antes de publicarse.
+- Las fuentes son divulgativas y públicas. **No se ha consultado a practicantes.** La página fue revisada por el autor y se publicó sin la marca `noindex`.
 - Todas las páginas se consultaron el 10 de octubre de 2026. Si cambian, hay que recomprobar.
 
 ### Obras para profundizar

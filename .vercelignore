@@ -2,8 +2,3 @@ tools
 supabase
 README.md
 .gitignore
-# contenido oculto por ahora: sigue en el repositorio pero Vercel no lo publica (ver README, "Ocultar y mostrar")
-cuba
-cuba-datos.js
-cuba.js
-articulos
