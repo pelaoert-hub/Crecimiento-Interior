@@ -10,5 +10,5 @@ window.CONFIG_COMUNIDAD = { url: '', clavePublica: '' };
 //   2) quitar de .vercelignore las lineas de ese contenido (si no, Vercel no publica las paginas)
 //   y despues subir VERSION en sw.js (y, para la capa Cuba, volver a poner en CASCARON de sw.js
 //   '/cuba/', '/cuba-datos.js' y '/cuba.js'). Detalle en el README, seccion "Ocultar y mostrar".
-window.MOSTRAR_CAPA_CUBA = false;   // capa Cuba: pendiente de revision por santeros, babalawos y paleros
+window.MOSTRAR_CAPA_CUBA = true;    // capa Cuba: visible (para ocultarla de nuevo: false aqui, ver README)
 window.MOSTRAR_BORRADORES = false;  // articulos con borrador:true en articulos.js
