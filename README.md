@@ -13,7 +13,7 @@ Dominio: **animaquieta.app** (registrado en Vercel).
 - **Árboles celtas:** dentro de las lecturas, marcado como calendario moderno inventado por Robert Graves en 1948, no antiguo.
 - **Capa Cuba** (`/cuba/`): tradiciones afrocubanas. Se activa con un interruptor en el menú; si el dispositivo tiene la zona horaria de La Habana, se sugiere una sola vez. Incluye 20 orishas con su santo católico, el sincretismo, el diloggún (letras, orishas que hablan en cada una, tirada simbólica), Ifá (los 16 odu mayores y el tablero) y Palo Monte (mpungos y métodos de adivinación). Cada dato indica su fuente.
 - **Cinco salas de práctica:** respirar (loto que se abre, patrones calma y caja), silencio (temporizador con cuenco), gratitud, soltar (el texto se disuelve y no se guarda) y examen del día.
-- **Tradiciones:** zazen, lectio divina, metta y examen de conciencia, en resumen general (en revisión).
+- **Tradiciones:** zazen, lectio divina, metta y examen de conciencia, en resumen general (revisadas, según indicó el autor).
 - **Biblioteca:** 9 artículos, con página propia en `/articulos/<id>/`.
 - **Velas (comunidad)** con moderación previa; desactivada hasta conectar Supabase.
 - **Mi práctica:** hábitos con lunas de los últimos 14 días y diario. Se guarda solo en el dispositivo.
