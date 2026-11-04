@@ -13,7 +13,7 @@ Dominio: **animaquieta.app** (registrado en Vercel).
 - **Árboles celtas:** dentro de las lecturas, marcado como calendario moderno inventado por Robert Graves en 1948, no antiguo.
 - **Capa Cuba** (`/cuba/`): tradiciones afrocubanas. Se activa con un interruptor en el menú; si el dispositivo tiene la zona horaria de La Habana, se sugiere una sola vez. Incluye 20 orishas con su santo católico, el sincretismo, el diloggún (letras, orishas que hablan en cada una, tirada simbólica), Ifá (los 16 odu mayores y el tablero) y Palo Monte (mpungos y métodos de adivinación). Cada dato indica su fuente.
 - **Cinco salas de práctica:** respirar (loto que se abre, patrones calma y caja), silencio (temporizador con cuenco), gratitud, soltar (el texto se disuelve y no se guarda) y examen del día.
-- **Tradiciones:** zazen, lectio divina, metta y examen de conciencia, en resumen general (en revisión).
+- **Tradiciones:** zazen, lectio divina, metta y examen de conciencia, en resumen general (revisadas, según indicó el autor).
 - **Biblioteca:** 9 artículos, con página propia en `/articulos/<id>/`.
 - **Velas (comunidad)** con moderación previa; desactivada hasta conectar Supabase.
 - **Mi práctica:** hábitos con lunas de los últimos 14 días y diario. Se guarda solo en el dispositivo.
@@ -100,7 +100,7 @@ Cada dato de `cuba-datos.js` lleva los números de las fuentes públicas (lista 
 - Lo que aparece en **una sola fuente** se marca así. Lo que las fuentes **contradicen** (el santo de Ochosi, Osun u Osain; algunos colores; la fecha de Elegguá, que una fuente da como 3 de junio) se avisa o se deja fuera.
 - Los fragmentos del diloggún entre comillas son literales de la fuente 5 (Proyecto Orunmila). Los orishas que hablan en cada letra son de la fuente 4 (EcuRed). Las preguntas «para pensar» son de Ánima y no pertenecen a la tradición.
 - Las letras 13 a 16 solo las leen los babalawos, según la fuente 4; no se muestra lectura. Ifá no se simula.
-- Las fuentes son divulgativas y públicas. **No se ha consultado a practicantes.** La página fue revisada por el autor y se publicó sin la marca `noindex`.
+- Las fuentes son divulgativas y públicas. **Revisada por practicantes (según indicó el autor).** Las prácticas y su interpretación varían según la región de Cuba: lo recogido es una versión general y hay variantes regionales. La página se publicó sin la marca `noindex`.
 - Todas las páginas se consultaron el 10 de octubre de 2026. Si cambian, hay que recomprobar.
 
 ### Obras para profundizar
