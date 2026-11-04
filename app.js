@@ -138,9 +138,20 @@ $('otra-carta').onclick = function(){ var n; do { n = Math.floor(Math.random()*C
 })();
 
 /* ---------- biblioteca ---------- */
-$('lista-articulos').innerHTML = (window.ARTICULOS || []).map(function(a){
-  return '<a href="/articulos/'+esc(a.id)+'/"><h3>'+esc(a.titulo)+'</h3><span class="m">'+esc(a.tema)+' · '+a.minutos+' min</span><p>'+esc(a.resumen)+(a.borrador ? ' <span class="borr">· borrador</span>' : '')+'</p></a>';
-}).join('');
+/* los borradores solo se muestran si MOSTRAR_BORRADORES es true en config.js; sin articulos visibles se quita
+   la seccion, su enlace del menu y cualquier enlace suelto marcado con data-articulo="<id>" */
+var ARTICULOS_VISIBLES = (window.ARTICULOS || []).filter(function(a){ return !a.borrador || window.MOSTRAR_BORRADORES === true; });
+if(ARTICULOS_VISIBLES.length){
+  $('lista-articulos').innerHTML = ARTICULOS_VISIBLES.map(function(a){
+    return '<a href="/articulos/'+esc(a.id)+'/"><h3>'+esc(a.titulo)+'</h3><span class="m">'+esc(a.tema)+' · '+a.minutos+' min</span><p>'+esc(a.resumen)+(a.borrador ? ' <span class="borr">· borrador</span>' : '')+'</p></a>';
+  }).join('');
+} else {
+  $$('#biblioteca, #menu a[href="#biblioteca"]').forEach(function(el){ el.parentNode.removeChild(el); });
+}
+$$('[data-articulo]').forEach(function(el){
+  var id = el.getAttribute('data-articulo');
+  if(!ARTICULOS_VISIBLES.some(function(a){ return a.id === id; })) el.parentNode.removeChild(el);
+});
 
 /* ---------- diario ---------- */
 function pintarDiario(){
