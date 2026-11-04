@@ -63,6 +63,21 @@ En GitHub: botón *Code* → *Download ZIP*, o `https://github.com/pelaoert-hub/
 
 Al cambiar archivos de la web, **subir `VERSION` en `sw.js`** para que los móviles reciban la versión nueva.
 
+## Ocultar y mostrar (capa Cuba y artículos en borrador)
+
+Ahora mismo **la capa Cuba y los 9 artículos en borrador están ocultos** en la web publicada. El contenido sigue en el repositorio (`cuba/`, `cuba-datos.js`, `cuba.js`, `articulos/`, `articulos.js`); solo se ha dejado de mostrar. Pasan dos cosas:
+
+- **La app** deja de mostrarlos según dos interruptores al final de `config.js`: `MOSTRAR_CAPA_CUBA` y `MOSTRAR_BORRADORES` (ahora, `false`). Con `false` desaparecen el interruptor y el aviso de la capa Cuba, su sección, su enlace del menú, la sección Biblioteca y el enlace al artículo de metta.
+- **Vercel** no publica las páginas, porque `.vercelignore` lista `cuba`, `cuba-datos.js`, `cuba.js` y `articulos`. Por eso `/cuba/` y `/articulos/<id>/` responden 404.
+
+Los textos de los borradores siguen siendo accesibles en `/articulos.js` (la app lo carga y filtra); lo que no hay es ninguna página ni enlace que los muestre.
+
+**Para volver a mostrar la capa Cuba:** en `config.js` poner `MOSTRAR_CAPA_CUBA = true`; en `.vercelignore` quitar `cuba`, `cuba-datos.js` y `cuba.js`; en `sw.js` volver a poner `'/cuba/'`, `'/cuba-datos.js'` y `'/cuba.js'` en `CASCARON` y subir `VERSION`.
+
+**Para volver a mostrar los artículos:** quitar `borrador: true` de los ya revisados (y `node tools/generar.js`), o poner `MOSTRAR_BORRADORES = true` para ver todos; en `.vercelignore` quitar `articulos`; subir `VERSION` en `sw.js`. Si se vuelve a poner la lista de artículos, el sitemap solo incluye los que ya no son borrador.
+
+**Aviso para las pruebas:** con los interruptores en `false`, `tools/pruebas/cuba_capas.js` y las partes de `portada.js` que miran la Biblioteca y `/articulos/` fallan a propósito. Para ejecutarlas, poner temporalmente los dos interruptores en `true` (las páginas existen en el repositorio).
+
 ## Publicar en animaquieta.app
 
 1. Proyecto nuevo en Vercel con este repositorio (sin comando de construcción; ya viene en `vercel.json`).

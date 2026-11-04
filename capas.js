@@ -3,6 +3,11 @@
 'use strict';
 var $ = function(id){ return document.getElementById(id); };
 if(!$('capa-toggle')) return;
+/* capa Cuba oculta (interruptor en config.js): se quitan banner, seccion, enlace del menu e interruptor */
+if(window.MOSTRAR_CAPA_CUBA !== true){
+  ['capa-banner', 'cuba', 'menu-cuba', 'capa-toggle'].forEach(function(id){ var el = $(id); if(el && el.parentNode) el.parentNode.removeChild(el); });
+  return;
+}
 var K = 'ci_capa_cuba', mem = null;
 function leer(){ try { return localStorage.getItem(K); } catch(e){ return mem; } }
 function guardar(v){ try { localStorage.setItem(K, v); } catch(e){ mem = v; } }
