@@ -1,4 +1,4 @@
--- APLICADO en el proyecto de Supabase anima el 4/11/2026.
+-- APLICADO en el proyecto de Supabase anima el 4/11/2026 (tabla inicial + migracion 2 al final).
 -- Proyecto "anima" (ref vxnaztujvdbhbgherpoa), NO el de Puentes.
 -- Los cambios frente al SQL inicial (permisos minimos, no-vacio, indice) estan marcados con [CAMBIO].
 
@@ -63,3 +63,59 @@ create index comunidad_aprobados_reciente_idx
 --
 --   Antes de aprobar, leer el texto completo: la web debe mostrarlo siempre como
 --   texto (textContent / escapado), nunca como HTML.
+
+-- =====================================================================================
+-- MIGRACION 2: RETIRO DE VELAS, APLICADA EL 4/11/2026 (migracion "comunidad_retiro_vela")
+-- Cambia los permisos de anon de arriba: desde aqui SELECT e INSERT van por columna.
+-- Estado resultante para anon: SELECT (id, nombre, texto, aprobado, created_at),
+-- INSERT (nombre, texto, token_hash), EXECUTE de retirar_vela. Nunca SELECT de token_hash.
+-- =====================================================================================
+
+-- (a) huella de la clave secreta de retiro. Solo la huella: la clave nunca sale del navegador
+-- al enviar. Las velas antiguas o enviadas sin clave quedan con null y no se pueden retirar desde la web.
+alter table public.comunidad_mensajes
+  add column token_hash text,
+  add constraint comunidad_token_hash_formato
+    check (token_hash is null or token_hash ~ '^[0-9a-f]{64}$');
+
+-- (b) permisos por columna. Al anadir la columna, el SELECT de tabla que tenia anon la
+-- habria dejado legible; se quita y se da columna a columna, sin token_hash.
+revoke select, insert on public.comunidad_mensajes from anon;
+grant select (id, nombre, texto, aprobado, created_at) on public.comunidad_mensajes to anon;
+grant insert (nombre, texto, token_hash) on public.comunidad_mensajes to anon;
+-- las politicas "enviar" y "leer aprobados" no cambian (leer aprobados usa la columna
+-- aprobado, que anon sigue pudiendo leer).
+
+-- (c) retirar una vela con su clave secreta.
+-- Es SECURITY DEFINER porque anon no tiene (ni debe tener) DELETE sobre la tabla: la funcion
+-- borra con los permisos de su dueno, pero solo la fila cuya huella coincide exactamente con
+-- la de la clave recibida. Sin conocer la clave (128 bits aleatorios) no se puede borrar
+-- una vela ajena. Las filas con token_hash null nunca coinciden (null = x no es verdadero).
+-- search_path vacio y nombres con esquema para que nadie pueda colar otra tabla o funcion.
+-- El aviso del advisor de Supabase sobre funciones SECURITY DEFINER ejecutables por anon es
+-- conocido y aceptado: la funcion hace una sola cosa, con validacion de entrada.
+create function public.retirar_vela(p_token text)
+returns boolean
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_huella text;
+  v_borradas integer;
+begin
+  if p_token is null or char_length(p_token) < 16 or char_length(p_token) > 128 then
+    return false;
+  end if;
+  v_huella := pg_catalog.encode(pg_catalog.sha256(pg_catalog.convert_to(p_token, 'UTF8')), 'hex');
+  delete from public.comunidad_mensajes where token_hash = v_huella;
+  get diagnostics v_borradas = row_count;
+  return v_borradas > 0;
+end;
+$$;
+
+-- (d) solo anon puede ejecutarla (la web no usa login).
+revoke execute on function public.retirar_vela(text) from public, anon, authenticated;
+grant execute on function public.retirar_vela(text) to anon;
+
+-- Moderacion: lo de arriba (ver, aprobar y borrar desde el panel) sigue valiendo igual.
