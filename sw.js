@@ -1,5 +1,5 @@
 /* service worker: la web funciona sin conexion. Subir VERSION al cambiar archivos del cascaron. */
-var VERSION = 'anima-v10';
+var VERSION = 'anima-v11';
 /* si Vercel no publica una ruta de esta lista, addAll falla y el service worker no se instala. Si se vuelve a ocultar
    la capa Cuba, quitar de aqui '/cuba/', '/cuba-datos.js' y '/cuba.js' (ver README, "Ocultar y mostrar"). */
 var CASCARON = ['/', '/estilo.css', '/fuentes/Marcellus-400.woff2', '/fuentes/HankenGrotesk.woff2', '/app.js', '/articulos.js', '/lecturas.js', '/lecturas-ui.js', '/iching.js', '/capas.js', '/cuba/', '/cuba-datos.js', '/cuba.js', '/privacidad/', '/config.js', '/manifest.webmanifest',
