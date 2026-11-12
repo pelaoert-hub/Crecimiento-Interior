@@ -15,7 +15,15 @@ Dominio: **animaquieta.app** (registrado en Vercel).
 - **Cinco salas de práctica:** respirar (loto que se abre, patrones calma y caja), silencio (temporizador con cuenco), gratitud, soltar (el texto se disuelve y no se guarda) y examen del día.
 - **Tradiciones:** zazen, lectio divina, metta y examen de conciencia, en resumen general (revisadas, según indicó el autor).
 - **Biblioteca:** 9 artículos, con página propia en `/articulos/<id>/`.
-- **Velas (comunidad)** con moderación previa; desactivada hasta conectar Supabase.
+- **Velas (comunidad)** con moderación previa. Los textos de aviso ya están en la portada (apodo en vez de nombre completo, nada de datos de salud de otras personas, revisión «cada pocos días», aviso de crisis sin teléfonos y enlace a Privacidad). **Están conectadas** a un proyecto de Supabase propio de Ánima (`anima`, región UE `eu-central-1`, separado del de Puentes) mediante `config.js` (URL y clave publicable, pública por diseño; la seguridad la ponen las reglas del SQL).
+  - **Moderar:** panel de Supabase → Table Editor → `comunidad_mensajes`. Marcar `aprobado` publica la vela; borrar la fila la rechaza. La consulta de pendientes está en los comentarios de `supabase/comunidad.sql`.
+  - **Apagarlas:** vaciar `url` y `clavePublica` en `config.js` y subir `VERSION` en `sw.js` para que se actualice la copia sin conexión. La web vuelve a mostrar que las velas no están disponibles.
+  - **Nota sobre el SQL:** el aplicado en el proyecto incluye, además de la tabla y las dos reglas originales, permisos mínimos para `anon` (desde la migración 2: `INSERT` de nombre, texto y `token_hash`, y `SELECT` de las aprobadas sin `token_hash`), dos comprobaciones de que nombre y texto no estén vacíos y un índice para la lista pública. Ese SQL es el que está en `supabase/comunidad.sql`.
+  - **Retirar la propia vela (sin cuentas):** al enviar, el navegador crea una clave secreta aleatoria (16 bytes, 32 caracteres hexadecimales) y manda a la base de datos solo su huella SHA-256 (columna `token_hash`). La clave se guarda únicamente en ese navegador (`localStorage`, clave `ci_mis_velas`, máximo 20 velas). El bloque «Mis velas», bajo el formulario, las muestra con un botón «Retirar» que llama a la función `retirar_vela` (`POST /rest/v1/rpc/retirar_vela`): borra de verdad la fila cuya huella coincide, aprobada o no. `anon` no puede leer `token_hash`, ni hacer `UPDATE` ni `DELETE` directos. SQL completo en la «migración 2» al final de `supabase/comunidad.sql` (aplicada el 4/11/2026).
+    - **Límites:** solo funciona desde el mismo navegador o app donde se envió. Si se borran los datos del navegador o se cambia de dispositivo, la clave se pierde; el respaldo es el correo (pelaoert@gmail.com, con apodo y texto) y borrar la fila a mano desde el panel, que sigue valiendo. Si el navegador no tiene `crypto.subtle` (página sin https), la vela se envía sin huella y la web avisa de que no podrá retirarse desde ahí.
+    - **Aviso del advisor de Supabase:** `retirar_vela` es `SECURITY DEFINER` y ejecutable por `anon`, y el advisor lo marca. Es a propósito: hace una sola cosa (borrar por huella exacta) y valida la entrada.
+  - **Pendiente:** no hay límite contra el envío masivo (spam); la moderación previa evita que se publique, pero no que lleguen filas.
+- **Privacidad** (`/privacidad/`): resumen en lenguaje sencillo de qué datos recoge Ánima. Casi todo se queda en el navegador; las velas son la única excepción (apodo, texto, fecha y la huella de la clave de retiro, en Supabase, UE). Cada persona puede retirar su vela desde «Mis velas»; el contacto de respaldo es pelaoert@gmail.com, visible en la web por decisión expresa del autor. Sin plazo de conservación inventado: se conservan hasta que se retiren.
 - **Mi práctica:** hábitos con lunas de los últimos 14 días y diario. Se guarda solo en el dispositivo.
 - **App instalable:** manifiesto, iconos (normales y *maskable*), `sw.js` (funciona sin conexión), botón de instalar y guía para iPhone.
 
@@ -29,10 +37,11 @@ Esta carpeta es **autosuficiente e independiente de Puentes**: contiene la web, 
     iching.js                            I Ching (datos, tirada e interfaz)
     capas.js                             interruptor de la capa Cuba
     cuba/ · cuba-datos.js · cuba.js      la capa Cuba (página, datos con fuentes, interfaz)
+    privacidad/                          página de privacidad (a mano; está en el sitemap y en el precaché de sw.js)
     sw.js · manifest.webmanifest         la parte de app instalable
     icons/ · fuentes/                    logo (flor de loto) y tipografías (Marcellus, Hanken Grotesk)
     config.js                            datos de la comunidad (vacío = desactivada)
-    supabase/comunidad.sql               tabla y reglas de las velas (NO aplicado)
+    supabase/comunidad.sql               tabla y reglas de las velas (aplicado en el proyecto «anima»)
     vercel.json · .vercelignore          despliegue
     articulos/ · sitemap.xml             generados por tools/generar.js
 
@@ -80,7 +89,7 @@ Ahora mismo **la capa Cuba y los 9 artículos están visibles** en la web public
 
 1. Proyecto nuevo en Vercel con este repositorio (sin comando de construcción; ya viene en `vercel.json`).
 2. Settings → Domains → añadir `animaquieta.app`.
-3. Velas: crear un proyecto de Supabase propio, aplicar `supabase/comunidad.sql` y rellenar `config.js`. Los mensajes se aprueban a mano en el panel.
+3. Velas: ya hay un proyecto de Supabase propio (`anima`), con `supabase/comunidad.sql` aplicado y `config.js` rellenado. Los mensajes se aprueban a mano en el panel. Comprobar de vez en cuando que se siguen revisando: la web promete «cada pocos días». Antes de publicar, comprobar que `/privacidad/` sigue siendo verdad: que el proyecto de Supabase esté de verdad en la Unión Europea, que el correo de contacto funcione y que se revisen las velas «cada pocos días», como dice la web. Si algo cambia, corregir también esa página.
 4. Revisar los artículos y las tradiciones; quitar `borrador: true`; luego `node tools/generar.js`. Los borradores llevan `noindex` y no están en el sitemap.
 5. Comprobar en el dominio real: que cargue, que se pueda instalar y que `robots.txt` y `sitemap.xml` respondan.
 

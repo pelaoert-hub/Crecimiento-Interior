@@ -265,14 +265,72 @@ function cargarVelas(){
     })
     .catch(function(){ $('com-lista').innerHTML = '<p class="nota" style="grid-column:1/-1;text-align:center">No se pudieron cargar las velas ahora mismo.</p>'; });
 }
+/* retirar la propia vela sin cuentas: al enviar se genera una clave secreta aleatoria que se
+   guarda SOLO en este navegador ('ci_mis_velas'); a la base de datos viaja solo su huella
+   SHA-256 (token_hash). Para retirar se manda la clave a la funcion retirar_vela, que borra
+   la fila cuya huella coincide. leer/guardar ya llevan try/catch por si localStorage falla. */
+var MIS = 'ci_mis_velas';
+function hex(bytes){ return Array.prototype.map.call(bytes, function(b){ return ('0'+b.toString(16)).slice(-2); }).join(''); }
+/* devuelve una promesa con {token, hash}, o null si el navegador no puede (contexto no seguro) */
+function nuevaClave(){
+  try{
+    var cr = window.crypto;
+    if(!cr || !cr.getRandomValues || !cr.subtle || !window.TextEncoder) return Promise.resolve(null);
+    var token = hex(cr.getRandomValues(new Uint8Array(16)));
+    return cr.subtle.digest('SHA-256', new TextEncoder().encode(token))
+      .then(function(h){ return {token: token, hash: hex(new Uint8Array(h))}; })
+      .catch(function(){ return null; });
+  }catch(e){ return Promise.resolve(null); }
+}
+function misVelas(){ var l = leer(MIS, []); return Array.isArray(l) ? l.filter(function(v){ return v && typeof v.token === 'string'; }) : []; }
+function quitarMia(token){ guardar(MIS, misVelas().filter(function(v){ return v.token !== token; })); pintarMisVelas(); }
+function pintarMisVelas(){
+  var l = misVelas(), cont = $('mis-lista');
+  cont.textContent = '';
+  $('mis-velas').classList.toggle('oculto', !l.length);
+  l.slice().reverse().forEach(function(v){
+    var fila = document.createElement('div'), txt = document.createElement('div'), p = document.createElement('p'), s = document.createElement('small'), b = document.createElement('button');
+    fila.className = 'mi-vela';
+    p.textContent = String(v.texto || '');
+    s.textContent = String(v.nombre || '') + ' · ' + String(v.fecha || '');
+    b.type = 'button'; b.className = 'boton'; b.textContent = 'Retirar';
+    b.setAttribute('aria-label', 'Retirar la vela: ' + String(v.texto || '').slice(0, 60));
+    b.onclick = function(){ retirarVela(v.token, b); };
+    txt.appendChild(p); txt.appendChild(s); fila.appendChild(txt); fila.appendChild(b); cont.appendChild(fila);
+  });
+}
+function retirarVela(token, b){
+  if(!confirm('¿Retirar esta vela? No se puede deshacer.')) return;
+  b.disabled = true; $('mis-ok').textContent = '';
+  fetch(C.url+'/rest/v1/rpc/retirar_vela', {method:'POST', headers: cab(), body: JSON.stringify({p_token: token})})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(ok){
+      quitarMia(token);
+      if(ok === true){ $('mis-ok').textContent = 'Tu vela se ha retirado.'; cargarVelas(); }
+      else $('mis-ok').textContent = 'Esa vela ya no estaba.';
+    })
+    .catch(function(){ b.disabled = false; $('mis-ok').textContent = 'No se pudo retirar. Inténtalo más tarde.'; });
+}
 if(C.url && C.clavePublica && /^https:\/\//.test(C.url)){
-  cargarVelas();
+  cargarVelas(); pintarMisVelas();
   $('com-enviar').onclick = function(){
     var n = $('com-nombre').value.trim(), t = $('com-texto').value.trim();
     if(!n || t.length < 5){ $('com-ok').textContent = ' Escribe tu nombre y tu intención.'; return; }
     $('com-enviar').disabled = true;
-    fetch(C.url+'/rest/v1/comunidad_mensajes', {method:'POST', headers: Object.assign({'Prefer':'return=minimal'}, cab()), body: JSON.stringify({nombre:n, texto:t})})
-      .then(function(r){ if(!r.ok) throw 0; $('com-texto').value = ''; $('com-ok').textContent = ' Recibido. Tu vela se encenderá cuando se revise.'; })
+    nuevaClave().then(function(k){
+      var cuerpo = {nombre:n, texto:t}; if(k) cuerpo.token_hash = k.hash;
+      return fetch(C.url+'/rest/v1/comunidad_mensajes', {method:'POST', headers: Object.assign({'Prefer':'return=minimal'}, cab()), body: JSON.stringify(cuerpo)})
+        .then(function(r){
+          if(!r.ok) throw 0;
+          $('com-texto').value = '';
+          if(k){
+            var l = misVelas(); l.push({token: k.token, nombre: n, texto: t, fecha: hoy()}); guardar(MIS, l.slice(-20)); pintarMisVelas();
+            $('com-ok').textContent = ' Recibido. Tu vela se encenderá cuando se revise.';
+          } else {
+            $('com-ok').textContent = ' Recibido. Tu vela se encenderá cuando se revise. Esta vela no podrá retirarse desde la web; si quieres retirarla, escribe a pelaoert@gmail.com.';
+          }
+        });
+    })
       .catch(function(){ $('com-ok').textContent = ' No se pudo enviar. Inténtalo más tarde.'; })
       .then(function(){ $('com-enviar').disabled = false; });
   };

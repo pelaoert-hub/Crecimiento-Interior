@@ -154,11 +154,22 @@
 
 <section id="velas"><div class="ancho">
   <div class="enc aparece"><span class="etq">Comunidad</span><h2>Velas</h2><p>Enciende una vela por alguien o por algo que lo necesite. Cada intención se revisa antes de mostrarse.</p></div>
+  <div class="com-avisos">
+    <p class="aviso">Usa un apodo, no tu nombre completo. No escribas nombres ni datos de salud de otras personas. Revisamos las velas cada pocos días antes de mostrarlas.</p>
+    <p class="aviso"><b>Si estás en peligro o pasando un momento de crisis, no uses las velas:</b> acude a los servicios de emergencia de tu país o habla con alguien de confianza. Las velas no sustituyen la ayuda profesional.</p>
+    <p class="nota">Las velas son la única parte de Ánima que guarda lo que escribes en un servidor. Puedes retirar tu vela cuando quieras desde «Mis velas», en este mismo navegador. Más información en <a href="/privacidad/">Privacidad</a>.</p>
+  </div>
   <div class="vidrio tile" id="com-activa" style="max-width:560px;margin:0 auto">
     <label for="com-nombre" style="margin-top:0">Tu nombre (o un apodo)</label><input id="com-nombre" maxlength="40" autocomplete="nickname">
     <label for="com-texto">Tu intención</label><textarea id="com-texto" rows="3" maxlength="300" placeholder="Por la salud de…, por la paz de…, por quien lo necesita"></textarea>
     <button class="boton lleno" id="com-enviar" type="button" style="margin-top:8px">Encender vela</button><span id="com-ok" class="nota" role="status"></span>
   </div>
+  <div class="vidrio tile mis-velas oculto" id="mis-velas">
+    <h3>Mis velas</h3>
+    <p>Las velas que enviaste desde este navegador. Puedes retirarlas cuando quieras: se borran de verdad, estén aprobadas o no.</p>
+    <div id="mis-lista"></div>
+  </div>
+  <p class="nota mis-ok" id="mis-ok" role="status"></p>
   <p class="aviso oculto" id="com-inactiva">Las velas todavía no están conectadas. Cuando se active, podrás encender una y ver las de otras personas.</p>
   <div class="velas" id="com-lista"></div>
   <p class="aviso">Lo que escribe la comunidad es de cada persona. Nadie lo ha verificado.</p>
@@ -190,7 +201,7 @@
 </div></section>
 </main>
 
-<footer><div class="ancho">Ánima · Orientación general; no sustituye ayuda médica ni psicológica. Si estás pasando por una crisis, busca ayuda profesional o llama a los servicios de emergencia de tu país.</div></footer>
+<footer><div class="ancho">Ánima · Orientación general; no sustituye ayuda médica ni psicológica. Si estás pasando por una crisis, busca ayuda profesional o llama a los servicios de emergencia de tu país.</div><div class="ancho pie-enlaces"><a href="/privacidad/">Privacidad</a></div></footer>
 
 <!-- salas de practica -->
 <div class="sala" id="sala" role="dialog" aria-modal="true" aria-label="Práctica" aria-hidden="true">
