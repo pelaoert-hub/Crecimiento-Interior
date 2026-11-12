@@ -77,7 +77,7 @@ Al cambiar archivos de la web, **subir `VERSION` en `sw.js`** para que los móvi
 Ahora mismo **la capa Cuba y los 9 artículos están visibles** en la web publicada, sin la marca `noindex` y sin la etiqueta de borrador, y el `sitemap.xml` incluye `/cuba/` y los 9 artículos. Antes estuvieron ocultos; el contenido nunca se borró (`cuba/`, `cuba-datos.js`, `cuba.js`, `articulos/`, `articulos.js`). Ocultar o mostrar depende de dos cosas:
 
 - **La app** lo decide con dos interruptores al final de `config.js`: `MOSTRAR_CAPA_CUBA` (ahora, `true`) y `MOSTRAR_BORRADORES` (ahora, `false`, que solo afecta a artículos con `borrador: true`; hoy no hay ninguno). Con `MOSTRAR_CAPA_CUBA = false` desaparecen el interruptor y el aviso de la capa Cuba, su sección y su enlace del menú. Con la lista de artículos vacía (o todos en borrador y `MOSTRAR_BORRADORES = false`) desaparecen la sección Biblioteca y el enlace al artículo de metta.
-- **Vercel** publica lo que `.vercelignore` no lista. Hoy solo ignora `tools`, `supabase`, `README.md` y `.gitignore`. Si se añaden `cuba`, `cuba-datos.js`, `cuba.js` o `articulos`, esas rutas responden 404.
+- **Vercel** publica lo que `.vercelignore` no lista. Hoy solo ignora `tools`, `supabase`, `README.md`, `.gitignore` y `.github`. Si se añaden `cuba`, `cuba-datos.js`, `cuba.js` o `articulos`, esas rutas responden 404.
 
 **Para ocultar otra vez la capa Cuba:** en `config.js` poner `MOSTRAR_CAPA_CUBA = false`; en `.vercelignore` añadir `cuba`, `cuba-datos.js` y `cuba.js`; en `sw.js` quitar `'/cuba/'`, `'/cuba-datos.js'` y `'/cuba.js'` de `CASCARON` (si no, la instalación del service worker falla con 404) y subir `VERSION`; en `tools/generar.js` quitar `/cuba/` del sitemap y volver a ejecutarlo.
 
@@ -92,6 +92,21 @@ Ahora mismo **la capa Cuba y los 9 artículos están visibles** en la web public
 3. Velas: ya hay un proyecto de Supabase propio (`anima`), con `supabase/comunidad.sql` aplicado y `config.js` rellenado. Los mensajes se aprueban a mano en el panel. Comprobar de vez en cuando que se siguen revisando: la web promete «cada pocos días». Antes de publicar, comprobar que `/privacidad/` sigue siendo verdad: que el proyecto de Supabase esté de verdad en la Unión Europea, que el correo de contacto funcione y que se revisen las velas «cada pocos días», como dice la web. Si algo cambia, corregir también esa página.
 4. Revisar los artículos y las tradiciones; quitar `borrador: true`; luego `node tools/generar.js`. Los borradores llevan `noindex` y no están en el sitemap.
 5. Comprobar en el dominio real: que cargue, que se pueda instalar y que `robots.txt` y `sitemap.xml` respondan.
+
+## Mantener activa la base de datos
+
+El proyecto de Supabase (`anima`) está en el plan gratuito, y ese plan **pausa los proyectos con poca actividad en 7 días** (<https://supabase.com/docs/guides/platform/free-project-pausing>). Ya pasó una vez. Para evitarlo, `.github/workflows/mantener-activo.yml` ("Mantener activa la base de datos") hace **una consulta de lectura muy pequeña cada día** (06:17 UTC) a `comunidad_mensajes`, con la clave publicable (que es pública por diseño y ya está en `config.js`). No usa secretos ni acciones de terceros, y no tiene permisos sobre el repositorio.
+
+- **Lanzarla a mano:** pestaña *Actions* → "Mantener activa la base de datos" → *Run workflow*.
+- **Saber si falla:** si Supabase no responde 200, la tarea termina en error: llega un correo de GitHub y aparece en rojo en *Actions*.
+- **`.github` no se publica:** está en `.vercelignore`.
+
+Limitaciones reales:
+
+1. **GitHub desactiva las tareas programadas de un repositorio público tras 60 días sin actividad en el repositorio** ("In a public repository, scheduled workflows are automatically disabled when no repository activity has occurred in 60 days", <https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-workflow-runs/disabling-and-enabling-a-workflow>). Mientras haya commits o cambios en el repositorio, sigue activa. Si se desactiva: *Actions* → el flujo → *Enable workflow*.
+2. **Solo ayuda si esa consulta cuenta como actividad.** Supabase dice que basta con "unas pocas peticiones a la base de datos al día" y que se puede evitar la pausa "haciendo llamadas a la API" del proyecto, pero **no publica el umbral exacto** ni dice expresamente que la API REST cuente. Por eso la tarea es diaria y no cada varios días. Si Supabase vuelve a avisar de una pausa, hay que revisar esto.
+3. **Si el proyecto ya está pausado**, la tarea falla y avisa, pero **no lo reactiva**: se restaura a mano en el panel de Supabase (*Resume project*; hay 90 días para hacerlo desde la pausa).
+4. La única forma garantizada de que no se pause es el plan Pro (de pago).
 
 ## Lecturas: qué se calcula y qué no
 
