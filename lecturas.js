@@ -202,7 +202,7 @@ var ARCANOS = [
 var SEFIROT = [null,
  ['Keter','la corona: el origen y la voluntad pura',['Iniciativa'],'sefira-1'],['Jojmá','la sabiduría: la chispa creativa y la intuición',['Creatividad'],'sefira-2'],['Biná','el entendimiento: dar forma y discernir',['Introspección'],'sefira-3'],
  ['Jésed','la bondad: la generosidad sin condiciones',['Cuidado'],'sefira-4'],['Guevurá','el rigor: los límites y la fuerza',['Límites'],'sefira-5'],['Tiféret','la belleza: la armonía y el equilibrio',['Sensibilidad'],'sefira-6'],
- ['Nétzaj','la perseverancia: seguir adelante',['Constancia'],'sefira-7'],['Hod','el esplendor: la humildad y la palabra',['Palabra'],'sefira-8'],['Yesod','el fundamento: la conexión entre lo de arriba y lo de abajo',['Constancia','Vínculos'],'sefira-9']
+ ['Nétzaj','la perseverancia: seguir adelante',['Constancia'],'sefira-7'],['Hod','el esplendor: la humildad y la palabra',['Palabra'],'sefira-8'],['Yesod','el fundamento: la conexión entre lo de arriba y lo de abajo',['Constancia'],'sefira-9']
 ];
 var DIAS = [['domingo','el Sol','vitalidad e identidad',['Creatividad'],'dia-domingo'],['lunes','la Luna','emociones y hogar',['Sensibilidad','Vínculos'],'dia-lunes'],['martes','Marte','energía y acción',['Iniciativa'],'dia-martes'],['miércoles','Mercurio','comunicación y estudio',['Palabra'],'dia-miercoles'],['jueves','Júpiter','crecimiento y generosidad',['Cuidado'],'dia-jueves'],['viernes','Venus','afecto y armonía',['Vínculos','Sensibilidad'],'dia-viernes'],['sábado','Saturno','orden y paciencia',['Constancia'],'dia-sabado']];
 var PALMA = {
@@ -418,15 +418,16 @@ var TEMAS_POS = {'Zodiaco occidental': 6, 'Zodiaco chino': 2, 'Árboles celtas':
 /* ---------- textos nuevos (fase 1: datos; la interfaz llega en la fase siguiente) ---------- */
 var NOMBRE_SECCION = 'Lo que se repite y lo que te dice algo';
 
-/* "De donde viene": cada dato historico esta comprobado; fuentes en tools/fuentes_lecturas.md */
+/* "De donde viene": cada dato historico esta comprobado; fuentes en tools/fuentes_lecturas.md
+   (revision critica del 12/11/2026: fechas suavizadas donde las fuentes no coinciden) */
 var ORIGENES = {
- zodiaco: 'Los doce signos iguales del zodiaco vienen de la astronomía de Babilonia, hacia el año 400 a. C. Las columnas de astrología en los periódicos son del siglo XX: en el Reino Unido, la primera fija fue la de R. H. Naylor en el Sunday Express, desde 1930.',
- zodiaco_chino: 'Las listas más antiguas que se conocen de los doce animales están en tiras de bambú de la época Qin halladas en Shuihudi (China), del siglo III a. C.; allí servían para describir a un ladrón según el día del robo. Usar el animal para el año de nacimiento aparece documentado más tarde.',
+ zodiaco: 'Los doce signos iguales del zodiaco vienen de la astronomía de Babilonia, en el siglo V a. C. Las columnas de astrología en los periódicos son del siglo XX: en el Reino Unido, la primera fija fue la de R. H. Naylor en el Sunday Express, desde 1930.',
+ zodiaco_chino: 'Las listas más antiguas que se conocen de doce animales, todavía algo distintas de la actual, están en tiras de bambú de la época Qin halladas en Shuihudi (China), del siglo III a. C.; allí servían para describir a un ladrón según el día del robo. Usar el animal para el año de nacimiento aparece documentado más tarde.',
  arboles: 'El alfabeto ogam aparece grabado en piedras, sobre todo en Irlanda, desde hacia el siglo IV d. C., y la idea de que sus letras nombran árboles es medieval. El calendario de árboles por meses lo propuso el poeta Robert Graves en The White Goddess (1948); los estudiosos no lo encuentran en fuentes celtas antiguas.',
  numerologia: 'El sistema que da un número a cada letra (A=1 … I=9) lleva el nombre de Pitágoras, pero tal como se usa hoy lo difundieron autores estadounidenses de principios del siglo XX, como L. Dow Balliett. La palabra «numerología» no está registrada en inglés antes de hacia 1907.',
- cabala: 'Las sefirot se nombran por primera vez en el Séfer Yetsirá, un antiguo texto hebreo, y la Cábala las desarrolló en la Edad Media; el Zóhar circuló en España a finales del siglo XIII. Unir una sefirá a las cifras de tu fecha no viene de esa tradición: es una adaptación que hace esta web.',
- tarot: 'Las cartas del tarot nacieron en el norte de Italia hacia 1440 para jugar. Su uso para adivinar se documenta desde finales del siglo XVIII, en París. Calcular una «carta de nacimiento» con las cifras de la fecha es un método moderno: la tarotista Mary K. Greer cuenta que lo aprendió de Angeles Arrien en 1977.',
- dia_planetario: 'Dar a cada día de la semana el nombre de uno de los siete astros que se ven a simple vista viene de la astrología helenística, y se extendió por el Imperio romano entre los siglos I y III. Por eso en español decimos lunes, martes, miércoles, jueves y viernes.',
+ cabala: 'La palabra «sefirot» aparece por primera vez en el Séfer Yetsirá, un antiguo texto hebreo. Los nombres que se usan aquí (Keter, Jojmá…) vienen de la Cábala de la Edad Media; el Zóhar circuló en España a finales del siglo XIII. Unir una sefirá a las cifras de tu fecha no viene de esa tradición: es una adaptación que hace esta web.',
+ tarot: 'Las cartas del tarot nacieron en el norte de Italia hacia 1440 para jugar. La primera prueba de su uso para adivinar es un manuscrito de Bolonia de hacia 1750, y esa costumbre se extendió desde París a partir de la década de 1780. Calcular una «carta de nacimiento» con las cifras de la fecha es un método moderno: la tarotista Mary K. Greer cuenta que lo aprendió de Angeles Arrien en 1977.',
+ dia_planetario: 'Dar a cada día de la semana el nombre de uno de los siete astros que se ven a simple vista es una costumbre de la Antigüedad griega y romana, ligada a la astrología; en el siglo I d. C. ya era conocida en todo el Imperio romano. Por eso en español decimos lunes, martes, miércoles, jueves y viernes.',
  quiromancia: 'Leer las líneas de la mano se practicó en muchos lugares de Asia y Europa, como la India y la Grecia antigua. En la Europa de los siglos XIII al XVI circularon tratados en latín que se atribuían, sin serlo, a Aristóteles.',
  iching: 'El I Ching empezó como un manual de adivinación de la dinastía Zhou, con fechas propuestas entre los siglos X y IV a. C.; en el siglo II a. C. pasó a ser uno de los Cinco Clásicos chinos. Consultarlo con monedas se generalizó en la dinastía Tang.'
 };
@@ -436,21 +437,24 @@ var ORIGENES = {
    Todas terminan en una pregunta abierta que admite dejarlo estar. */
 var CONCLUSIONES = {
  marcado_repetido: 'Marcaste «{tema}» y ese tema aparece en {n} de las {max} familias que miraste. No anuncia nada: es un tema que hoy te llamó la atención. ¿Hay algo pequeño que querrías mirar más de cerca esta semana, o prefieres dejarlo estar?',
- varios_cruces: '{cruces} de los {marcas} temas que marcaste también se repiten entre las tradiciones; el que más, «{tema}», en {n} de las {max} familias. Que coincidan no lo vuelve un aviso ni una certeza. ¿Te apetece quedarte un rato con uno de ellos, o prefieres dejarlo estar?',
+ varios_cruces: '{cruces} de los {marcas} temas que marcaste también se repiten entre las tradiciones; el que más marcaste, «{tema}», aparece en {n} de las {max} familias. Que coincidan no lo vuelve un aviso ni una certeza. ¿Te apetece quedarte un rato con uno de ellos, o prefieres dejarlo estar?',
  marcado_en_una: 'Marcaste «{tema}» y solo aparece en {n} de las {max} familias. Que te llamara la atención a ti ya es un dato, y no hace falta que las tradiciones coincidan contigo. ¿Qué te hizo fijarte en él, o prefieres dejarlo estar?',
  marcado_en_ninguna: 'Marcaste «{tema}» y ninguna de las {max} familias que miraste lo nombra. Eso no le quita valor: lo trajiste tú. ¿Qué tiene este tema para ti ahora mismo, o prefieres dejarlo estar?',
  ningun_cruce: 'Ninguno de los {marcas} temas que marcaste coincide con lo que repiten las tradiciones. También es un resultado válido: lo que hoy te importa no tiene por qué salir de una fecha. ¿Quieres quedarte con alguno de tus temas para pensarlo con calma, o prefieres dejarlo estar?',
  repetido_no_marcado: 'Las tradiciones repiten «{tema}» en {n} de las {max} familias, pero tú no lo marcaste. Que algo se repita aquí es frecuente y no te obliga a nada. ¿Te dice algo al verlo escrito, o prefieres dejarlo estar?'
 };
 
-/* avisos del azar: describen como funciona la herramienta. Huecos: {mediana}, {p10}, {p90}, {pct2}, {pct3}, {tema}, {pctTema} */
+/* avisos del azar: describen como funciona la herramienta. Huecos: {desde}, {hasta}, {mediana}, {tema}, {pctTema}.
+   La tabla recorre todas las fechas del rango (no las elige al azar) y cuenta fechas, no personas. */
 var AVISOS_AZAR = [
- 'En fechas elegidas al azar, casi todo el mundo tiene varios temas repetidos: la persona típica tiene {mediana}. Repetirse aquí es lo normal. Lo que tú marcas es lo que cuenta.',
+ 'En las fechas de {desde} a {hasta}, casi todas tienen varios temas repetidos: la fecha típica tiene {mediana}. Repetirse aquí es lo normal. Lo que tú marcas es lo que cuenta.',
  'A {pctTema} de cada 100 fechas les sale «{tema}» en dos o más familias solo por cómo están hechas las cuentas. Es un dato sobre la herramienta, no sobre ti.',
- 'Numerología, cábala, tarot y día de la semana salen de las mismas cifras de tu fecha. Por eso aquí cuentan como una sola familia, y no como cuatro.'
+ 'Numerología, cábala, tarot y día de la semana salen de las mismas cifras de la fecha. Por eso aquí cuentan como una sola familia.'
 ];
-/* version sin cifras: se usa cuando la cuenta de la tabla ya no describe lo que la persona ve (ver azarExacto) */
-var AVISO_AZAR_SIN_CIFRAS = 'En fechas elegidas al azar, casi todo el mundo tiene varios temas repetidos. Repetirse aquí es lo normal. Lo que tú marcas es lo que cuenta.';
+/* version sin cifras: se usa cuando la cuenta de la tabla ya no describe lo que la persona ve (ver azarExacto).
+   No puede decir "casi todas": con dos o tres familias elegidas los temas repetidos son mucho menos frecuentes.
+   Lo que si vale siempre: anadir tradiciones nunca quita repeticiones, y con todas las de la fecha casi todas repiten. */
+var AVISO_AZAR_SIN_CIFRAS = 'Cuantas más tradiciones mires, más fácil es que algún tema se repita solo por cómo están hechas las cuentas; con todas las que salen de la fecha, les pasa a casi todas las fechas. Lo que tú marcas es lo que cuenta.';
 function rellenar(plantilla, datos){ return String(plantilla).replace(/\{(\w+)\}/g, function(m, k){ return datos && datos[k] != null ? String(datos[k]) : m; }); }
 
 /* ---------- tabla del azar ----------
@@ -458,7 +462,7 @@ function rellenar(plantilla, datos){ return String(plantilla).replace(/\{(\w+)\}
    Para regenerarla: ejecutar ese script y pegar aqui la constante que imprime. La prueba
    tools/pruebas/motor_lecturas.js comprueba que coincide con lo que calcula el motor. */
 /* TABLA_AZAR_INICIO */
-var TABLA_AZAR = {"rango":["1930-01-01","2010-12-31"],"fechas":29585,"tz":"America/Havana","hora":"12:00 local","paso":1,"maxFamilias":4,"maxFamiliasConPalma":5,"maxObservado":4,"pctConAlguno":99.5,"pctConTres":38.5,"pctConCuatro":1.9,"repetidos":{"p10":2,"mediana":3,"p90":4,"reparto":{"0":0.5,"1":7.2,"2":26.6,"3":36.3,"4":21.4,"5":6.7,"6":1.1,"7":0.1,"8":0}},"temas":{"Iniciativa":{"dos":30.5,"tres":4.4},"Constancia":{"dos":36.9,"tres":6.2},"Cambio":{"dos":19,"tres":2.4},"Soltar":{"dos":9.4,"tres":0.8},"Sensibilidad":{"dos":34.9,"tres":5.6},"Vínculos":{"dos":28.1,"tres":3.1},"Cuidado":{"dos":32.8,"tres":4.8},"Palabra":{"dos":12.5,"tres":0.7},"Creatividad":{"dos":30.4,"tres":6.6},"Introspección":{"dos":27.7,"tres":6.2},"Límites":{"dos":13.5,"tres":0.5},"Libertad":{"dos":20.3,"tres":2.1}}};
+var TABLA_AZAR = {"rango":["1930-01-01","2010-12-31"],"fechas":29585,"tz":"America/Havana","hora":"12:00 local","paso":1,"maxFamilias":4,"maxFamiliasConPalma":5,"maxObservado":4,"pctConAlguno":99.5,"pctConTres":38.3,"pctConCuatro":1.9,"repetidos":{"p10":2,"mediana":3,"p90":4,"reparto":{"0":0.5,"1":7.4,"2":27.2,"3":36.4,"4":20.9,"5":6.5,"6":1,"7":0.1,"8":0}},"temas":{"Iniciativa":{"dos":30.5,"tres":4.4},"Constancia":{"dos":36.9,"tres":6.2},"Cambio":{"dos":19,"tres":2.4},"Soltar":{"dos":9.4,"tres":0.8},"Sensibilidad":{"dos":34.9,"tres":5.6},"Vínculos":{"dos":25.6,"tres":2.8},"Cuidado":{"dos":32.8,"tres":4.8},"Palabra":{"dos":12.5,"tres":0.7},"Creatividad":{"dos":30.4,"tres":6.6},"Introspección":{"dos":27.7,"tres":6.2},"Límites":{"dos":13.5,"tres":0.5},"Libertad":{"dos":20.3,"tres":2.1}}};
 /* TABLA_AZAR_FIN */
 
 /* ---------- fase 2: tradiciones elegibles, marcas y resumen ---------- */
@@ -482,10 +486,10 @@ function tradicionDe(trad){ return TRADICION_DE[String(trad).split(' (')[0]] || 
 /* filtra tarjetas por las claves de tradicion elegidas (lo no elegido no se muestra ni cuenta) */
 function elegir(tarjetas, claves){ return (tarjetas || []).filter(function(c){ return claves.indexOf(tradicionDe(c.trad)) >= 0; }); }
 
-/* textos nuevos de la interfaz (pendientes de revision, como los de la fase 1) */
+/* textos nuevos de la interfaz (revision critica de Claude el 12/11/2026; sin revision de personas expertas) */
 var TEXTOS_UI = {
  tradiciones_titulo: 'Qué tradiciones mirar',
- tradiciones_nota: 'Todas se calculan con tu fecha; la quiromancia, con tu palma. Lo que desmarques no se muestra ni cuenta en lo que se repite.',
+ tradiciones_nota: 'Salen de tu fecha (la numerología, también de tu nombre si lo escribes); la quiromancia, de lo que elegiste sobre tu palma. Lo que desmarques no se muestra ni cuenta en lo que se repite.',
  iching_aparte: 'El I Ching, más abajo, es una tirada aparte: ahí manda el azar de las monedas y no se cruza con tu fecha.',
  de_donde: 'De dónde viene',
  marca_pregunta: '¿Te dice algo?',
@@ -496,7 +500,7 @@ var TEXTOS_UI = {
  marcado_titulo: 'Lo que tú marcaste',
  aparece_en: 'aparece en {n} de {max} familias',
  marcado_veces: 'lo marcaste en {n} texto{s}',
- sin_marcas: 'No has marcado ninguna tarjeta como «Me dice algo». Si alguna te lo dice, puedes marcarla debajo de su texto; si no, también está bien.',
+ sin_marcas: 'No has marcado ningún texto como «Me dice algo». Si alguno te lo dice, puedes marcarlo justo debajo; si no, también está bien.',
  una_familia: 'Para ver qué se repite hacen falta al menos dos familias de tradiciones.',
  nada_repetido: 'Aquí cada tradición mira algo distinto y no hay temas que se repitan.',
  pestana_vacia: 'Con las tradiciones que elegiste no hay nada que mostrar en esta pestaña.'
@@ -519,7 +523,7 @@ function azarExacto(claves, hayNombre, hayPalma){
 /* texto del azar para "Tu base": con cifras si es exacto; si no, la version general. tema = el de la conclusion (opcional) */
 function textoAzar(claves, hayNombre, hayPalma, tema){
   if(!azarExacto(claves, hayNombre, hayPalma)) return AVISO_AZAR_SIN_CIFRAS;
-  var t = rellenar(AVISOS_AZAR[0], {mediana: TABLA_AZAR.repetidos.mediana});
+  var t = rellenar(AVISOS_AZAR[0], {desde: TABLA_AZAR.rango[0].slice(0, 4), hasta: TABLA_AZAR.rango[1].slice(0, 4), mediana: TABLA_AZAR.repetidos.mediana});
   if(tema && TABLA_AZAR.temas[tema]) t += ' ' + rellenar(AVISOS_AZAR[1], {tema: tema, pctTema: Math.round(TABLA_AZAR.temas[tema].dos)});
   return t;
 }
@@ -550,7 +554,9 @@ function resumen(tarjetas, marcas){
     .sort(function(a, b){ return b.veces - a.veces || b.n - a.n || idx(a.tema) - idx(b.tema); });
   var cruces = marcados.filter(function(m){ return m.n >= 2; });
   var plantilla = null, v = {max: co.maxFamilias, marcas: marcados.length, cruces: cruces.length};
-  if(nSi > 0){
+  /* con una sola familia no hay nada que cruzar (y saldria "1 de las 1 familias"): sin conclusion */
+  if(co.maxFamilias < 2){ /* nada */ }
+  else if(nSi > 0){
     if(cruces.length >= 2){ plantilla = 'varios_cruces'; v.tema = cruces[0].tema; v.n = cruces[0].n; }
     else if(cruces.length === 1){ plantilla = 'marcado_repetido'; v.tema = cruces[0].tema; v.n = cruces[0].n; }
     else if(marcados.length === 1){ v.tema = marcados[0].tema; v.n = marcados[0].n; plantilla = v.n === 0 ? 'marcado_en_ninguna' : 'marcado_en_una'; }

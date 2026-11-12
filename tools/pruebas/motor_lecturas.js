@@ -119,10 +119,14 @@ si('azarExacto: con palma y quiromancia en la cuenta -> false', L.azarExacto(TOD
 si('azarExacto: palma rellena pero quiromancia desmarcada -> true (la palma no entra en la cuenta)', L.azarExacto(FECHA,false,true)===true);
 si('azarExacto: sin tradiciones o sin argumentos -> false', L.azarExacto([],false,false)===false && L.azarExacto()===false);
 const exacto=L.textoAzar(FECHA,false,false,'Cambio'), sinCif=L.textoAzar(FECHA.slice(1),false,false,'Cambio');
-si('textoAzar exacto: lleva la mediana y el porcentaje del tema de la tabla', exacto.includes('la persona típica tiene '+L.TABLA_AZAR.repetidos.mediana+'.') && exacto.includes('A '+Math.round(L.TABLA_AZAR.temas.Cambio.dos)+' de cada 100 fechas') && exacto.includes('«Cambio»'));
-si('textoAzar exacto sin tema: solo la primera frase con cifra', L.textoAzar(FECHA,false,false,null)===L.rellenar(L.AVISOS_AZAR[0],{mediana:L.TABLA_AZAR.repetidos.mediana}));
+si('textoAzar exacto: lleva la mediana y el porcentaje del tema de la tabla', exacto.includes('la fecha típica tiene '+L.TABLA_AZAR.repetidos.mediana+'.') && exacto.startsWith('En las fechas de 1930 a 2010,') && exacto.includes('A '+Math.round(L.TABLA_AZAR.temas.Cambio.dos)+' de cada 100 fechas') && exacto.includes('«Cambio»'));
+si('textoAzar exacto sin tema: solo la primera frase con cifra', L.textoAzar(FECHA,false,false,null)===L.rellenar(L.AVISOS_AZAR[0],{desde:L.TABLA_AZAR.rango[0].slice(0,4),hasta:L.TABLA_AZAR.rango[1].slice(0,4),mediana:L.TABLA_AZAR.repetidos.mediana}));
 si('textoAzar no exacto (tradicion desmarcada, nombre o palma): version sin cifras, igual en los tres casos', sinCif===L.AVISO_AZAR_SIN_CIFRAS && L.textoAzar(FECHA,true,false,'Cambio')===sinCif && L.textoAzar(TODAS8,false,true,'Cambio')===sinCif);
-si('la version sin cifras no tiene numeros ni huecos, no nombra el tema y empieza como la de cifras', !/\d|\{|Cambio|consenso/i.test(L.AVISO_AZAR_SIN_CIFRAS) && L.AVISO_AZAR_SIN_CIFRAS.startsWith('En fechas elegidas al azar, casi todo el mundo tiene varios temas repetidos.'));
+si('la version sin cifras no tiene numeros ni huecos, no nombra el tema y no dice que casi todo el mundo repita (no vale con pocas familias)', !/\d|\{|Cambio|consenso/i.test(L.AVISO_AZAR_SIN_CIFRAS) && !/casi todo el mundo/.test(L.AVISO_AZAR_SIN_CIFRAS) && /Lo que tú marcas es lo que cuenta\.$/.test(L.AVISO_AZAR_SIN_CIFRAS));
+// revision critica 12/11/2026: con una sola familia no hay conclusion (evita "1 de las 1 familias")
+const unaFam=[C('Astrología china','ano_chino',[{id:'u1',tags:['Cambio']}])];
+si('una sola familia: sin conclusion aunque haya marcas', L.resumen(unaFam,{u1:'si'}).plantilla===null && L.resumen(unaFam,{u1:'si'}).texto==='' && L.resumen(unaFam,{u1:'no'}).plantilla===null);
+si('ninguna conclusion posible dice "1 de las 1" ni "0 de"', [r1,r2,r3,r4,r5,r7].every(x=>!/\b1 de las 1\b|\b0 de las\b/.test(x.texto)));
 si('sin lenguaje de prediccion en los textos nuevos', !/consenso|predic|destino|te pasará|ocurrirá|seguro que/i.test([L.AVISO_AZAR_SIN_CIFRAS,L.TEXTOS_UI.sol_incierto].join(' ')));
 const rN=L.leer({nombre:'Ana María Pérez',anio:1990,mes:7,dia:29,hora:'',tz:'America/Havana',palma:{},ahora:Date.UTC(2026,9,10,15)}).resumen;
 const rP=L.leer({nombre:'',anio:1990,mes:7,dia:29,hora:'',tz:'America/Havana',palma:{vida:'amplia'},ahora:Date.UTC(2026,9,10,15)}).resumen;

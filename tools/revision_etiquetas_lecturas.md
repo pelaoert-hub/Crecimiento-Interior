@@ -5,10 +5,10 @@ Tabla para revisar a mano. Cada texto de las lecturas tiene un **id fijo** (no c
 - **Vocabulario (12 temas):** Iniciativa (empezar, dar el primer paso) · Constancia (antes «Estabilidad»: sostener, construir despacio) · Cambio (etapas que se mueven) · Soltar (cerrar ciclos, dejar ir) · Sensibilidad (sentir y percibir) · Vínculos (familia, pareja, amistad) · Cuidado (antes «Servicio»: atender a otros) · Palabra (antes «Comunicación»: decir, escribir, escuchar) · Creatividad (hacer y expresar) · Introspección (mirar hacia dentro, silencio) · Límites (decir no, proteger lo propio) · Libertad (espacio, movimiento, independencia).
 - **95 textos con tema:** 12 signos, 12 animales, 13 árboles, 12 números, 9 sefirot, 22 arcanos, 7 días, 6 rasgos de la palma y las 2 lunas fijas de la pestaña «Este mes». Los 5 elementos chinos **no llevan tema** y no entran en el cruce (igual que antes). El I Ching tampoco entra.
 - **Columna «antes»:** los temas que tenía con el vocabulario de 8, para comparar.
-- **Motivo:** solo en los 33 casos dudosos. Donde no hay motivo, el tema sale literalmente del texto.
+- **Motivo:** solo en los 33 casos dudosos. Al final está la revisión crítica de esos 33 (12/11/2026). Donde no hay motivo, el tema sale literalmente del texto.
 - Cambiar una etiqueta es cambiar la lista de temas de esa entrada en `lecturas.js` y volver a generar la tabla del azar (`node tools/azar_coincidencias.js`, ver el comentario en `lecturas.js`); la prueba `tools/pruebas/motor_lecturas.js` avisa si la tabla no cuadra.
 
-Recuento de usos por tema: Constancia 16 · Iniciativa 15 · Sensibilidad 15 · Introspección 14 · Creatividad 13 · Vínculos 12 · Cuidado 11 · Cambio 11 · Soltar 9 · Límites 9 · Libertad 7 · Palabra 6.
+Recuento de usos por tema: Constancia 16 · Iniciativa 15 · Sensibilidad 15 · Introspección 14 · Creatividad 13 · Vínculos 11 · Cuidado 11 · Cambio 11 · Soltar 9 · Límites 9 · Libertad 7 · Palabra 6.
 
 ### Zodiaco occidental (familia: Sol y Luna)
 
@@ -91,7 +91,7 @@ Recuento de usos por tema: Constancia 16 · Iniciativa 15 · Sensibilidad 15 · 
 | `sefira-6` | Tiféret | Sensibilidad | Sensibilidad | Sensibilidad por «la belleza, la armonía»; encaje débil. |
 | `sefira-7` | Nétzaj | Constancia | Iniciativa | Constancia por «la perseverancia» (antes Iniciativa). |
 | `sefira-8` | Hod | Palabra | Comunicación |  |
-| `sefira-9` | Yesod | Constancia, Vínculos | Sensibilidad, Comunicación | Constancia por «el fundamento», Vínculos por «la conexión». Dudoso. |
+| `sefira-9` | Yesod | Constancia | Sensibilidad, Comunicación | Constancia por «el fundamento». **Vínculos quitado el 12/11/2026:** «la conexión entre lo de arriba y lo de abajo» no habla de familia, pareja ni amistad. |
 
 ### Tarot (familia: Aritmética de la fecha)
 
@@ -149,3 +149,41 @@ Recuento de usos por tema: Constancia 16 · Iniciativa 15 · Sensibilidad 15 · 
 |---|---|---|---|---|
 | `fase-luna-nueva` | Luna nueva | Iniciativa | Iniciativa |  |
 | `fase-luna-llena` | Luna llena | Soltar | Cambio | Soltar por «de balance y de soltar» (antes Cambio). |
+
+## Revisión crítica de los 33 casos dudosos (12 de noviembre de 2026)
+
+Hecha por Claude (un asistente de IA), **no por personas expertas ni practicantes** de estas tradiciones. Criterio único: lo que **dice el texto** que ve la persona (y su pregunta «Para pensar», si la tiene), comparado con la descripción de cada tema en la web (`DESCRIPCION_TEMAS`). No se usó el significado «oficial» de cada tradición.
+
+**Resultado: 1 cambio, 21 se mantienen, 11 quedan como decisión humana pendiente.** La tabla del azar se regeneró por el cambio de Yesod (ver abajo).
+
+### Cambiado
+
+| id | antes | ahora | motivo |
+|---|---|---|---|
+| `sefira-9` Yesod | Constancia, Vínculos | Constancia | El texto dice «la conexión entre lo de arriba y lo de abajo». Vínculos se describe como «Familia, pareja, amistad»: el texto no habla de personas. |
+
+### Se mantienen (el tema sale del texto)
+
+`signo-tauro` (constancia, lealtad dentro de lo mismo) · `signo-leo` (Creatividad: «expresar lo que siente»; no dice nada de empezar) · `signo-libra` (Vínculos: «buena relación con los demás», «compañía») · `animal-rata` (Cambio por «adaptabilidad»; encaje justo pero no hay tema mejor) · `animal-conejo` · `animal-gallo` · `animal-perro` · `arbol-roble` · `arbol-hiedra` · `num-9` · `num-22` · `num-33` · `sefira-7` · `arcano-5` · `arcano-8` · `arcano-14` · `arcano-15` (Soltar: lo dice su pregunta) · `arcano-21` El Mundo (Soltar: «culminación» y la pregunta «¿Qué he completado…?» son cerrar un ciclo; «dejar ir» no lo dice) · `palma-corazon-recta` (el texto dice «los vínculos») · `palma-vida-cerrada` («cuidar la energía, cautela» = proteger lo propio) · `fase-luna-llena` (el texto dice «soltar»).
+
+### Decisión humana pendiente (no se tocaron)
+
+| id | temas | por qué queda abierto |
+|---|---|---|
+| `arcano-11` La Justicia | Límites | El texto («equilibrio, verdad y consecuencia de los actos») no habla de decir no ni de proteger lo propio. Ningún tema encaja claro; candidatos: Palabra («verdad») o Vínculos («justo con los demás»). |
+| `arcano-19` El Sol | Creatividad | «Claridad, alegría y vitalidad» no es «hacer y expresar». Ningún tema de los 12 encaja bien. |
+| `dia-domingo` | Creatividad | «Vitalidad e identidad»: mismo problema que El Sol. |
+| `sefira-6` Tiféret | Sensibilidad | «La belleza, la armonía y el equilibrio»: encaje débil, sin alternativa clara. |
+| `arcano-17` La Estrella | Sensibilidad | «Renovación» podría ser Cambio. |
+| `animal-mono` | Creatividad | La Rata tiene «ingenio, adaptabilidad» → Cambio; el Mono, «ingenio, curiosidad y versatilidad» → Creatividad. Criterio desigual: decidir si «versatilidad» suma Cambio. |
+| `animal-cerdo` | Cuidado | «Disfrute» no encaja en ningún tema; Cuidado sale solo de «generosidad». |
+| `signo-piscis` | Sensibilidad, Límites | «La imaginación» y «arte» podrían sumar Creatividad (la tenía antes). |
+| `arbol-serbal` | Límites, Iniciativa | Iniciativa sale de «el poder personal y el éxito», que no es «empezar». |
+| `arbol-espino-blanco` | Iniciativa | «Decisiones de negocios y contactos profesionales»: Iniciativa es débil; Vínculos tampoco es «familia, pareja, amistad». |
+| `palma-vida-amplia` | Iniciativa | «Vitalidad y apertura a la experiencia»: Libertad encajaría tanto o más. |
+
+Decidir estos once es elegir qué cuenta como «lo que dice el texto» cuando ningún tema encaja del todo; por eso no se cambiaron. Cualquier cambio obliga a regenerar `TABLA_AZAR`.
+
+### Lo que cambió en la tabla del azar al quitar Vínculos de Yesod
+
+Solo afecta a las fechas cuyo camino de vida reduce a 9. Vínculos repetido en 2 o más familias: 28,1 % → 25,6 % (en 3 o más: 3,1 % → 2,8 %). Fechas con al menos 3 familias de acuerdo en algún tema: 38,5 % → 38,3 %. La mediana de temas repetidos sigue en 3 (p10 = 2, p90 = 4); el reparto se movió unas décimas. Los demás temas no cambian.
