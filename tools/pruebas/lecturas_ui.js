@@ -12,7 +12,7 @@ const { chromium } = require(process.env.PLAYWRIGHT||'playwright');
   const tabs={}; for(const t of ['hoy','mes','ano']){ await p.click(`[data-t="${t}"]`); tabs[t]=await p.locator('.lec-card').count(); }
   await p.click('[data-t="nacimiento"]');
   const imgInyectada=await p.evaluate(()=>!!document.querySelector('#lec-resumen img, #lec-cuerpo img'));
-  const aviso=/no es una predicci[oó]n/i.test(await p.textContent('.lec-aviso')); const barnum=/efecto Barnum/.test(tiene);
+  const aviso=/no es una predicci[oó]n/i.test(await p.textContent('.lec-aviso')); const barnum=/al azar/.test(await p.textContent('#lec-repite')); // fase 2: en "Tu base" el aviso es el del azar; Barnum queda en las otras pestanas
   const ov=await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
   await p.screenshot({path:`${require('os').tmpdir()}/${n}-lec-form.png`}); 
   await p.evaluate(()=>document.querySelectorAll('.aparece').forEach(e=>e.classList.add('visto'))); await p.locator('#lec-resultado').screenshot({path:`${require('os').tmpdir()}/${n}-lec-res.png`});

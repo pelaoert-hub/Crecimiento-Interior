@@ -44,6 +44,54 @@ si('6 conclusiones que terminan en pregunta abierta con "dejarlo estar"', concl.
 const todos=[L.NOMBRE_SECCION].concat(concl,L.AVISOS_AZAR,Object.values(L.ORIGENES),Object.values(L.DESCRIPCION_TEMAS)).join(' ');
 si('sin "consenso" ni lenguaje de prediccion', !/consenso|predic|destino|te pasará|ocurrirá|seguro que/i.test(todos));
 si('rellenar plantillas', L.rellenar(L.CONCLUSIONES.marcado_repetido,{tema:'Cambio',n:3,max:4})==='Marcaste «Cambio» y ese tema aparece en 3 de las 4 familias que miraste. No anuncia nada: es un tema que hoy te llamó la atención. ¿Hay algo pequeño que querrías mirar más de cerca esta semana, o prefieres dejarlo estar?');
+// ---- fase 2: elegir tradiciones y resumen (marcas + coincidencia) con tarjetas fijas ----
+const C=(trad,familia,items)=>({trad,familia,items,tags:[...new Set(items.flatMap(i=>i.tags))]});
+const fij=[
+  C('Astrología occidental','astros',[{id:'a1',tags:['Cambio']},{id:'a2',tags:['Sensibilidad'],incierto:true}]),
+  C('Astrología china','ano_chino',[{id:'b1',tags:['Cambio','Libertad']}]),
+  C('Tarot','aritmetica',[{id:'c1',tags:['Cambio']}]),
+  C('Cábala (lectura inspirada)','aritmetica',[{id:'d1',tags:['Libertad','Sensibilidad']}]),
+  C('Árboles celtas (calendario moderno)','arboles',[{id:'f1',tags:['Sensibilidad']}]),
+  C('Quiromancia','quiromancia',[{id:'g1',tags:['Límites']}]),
+  C('Otra cosa',null,[{id:'e1',tags:['Palabra']}])
+];
+const R=m=>L.resumen(fij,m), nDe=(r,t)=>(r.repetidos.find(x=>x.tema===t)||{n:0}).n;
+const r0=R({});
+si('resumen: 5 familias, la tarjeta sin familia no cuenta', r0.max===5);
+si('resumen: tarot y cabala son la misma familia (Cambio 3, Libertad 2; no 4 y 3)', nDe(r0,'Cambio')===3 && nDe(r0,'Libertad')===2);
+si('resumen: la Luna incierta no cuenta (Sensibilidad 2, no 3)', nDe(r0,'Sensibilidad')===2);
+si('resumen sin marcas: sin conclusion de cruce', r0.plantilla===null && r0.texto==='' && r0.nSi===0 && r0.marcados.length===0);
+const r1=R({c1:'si'});
+si('una marca que cruza -> marcado_repetido "3 de las 5"', r1.plantilla==='marcado_repetido' && r1.tema==='Cambio' && /aparece en 3 de las 5 familias/.test(r1.texto));
+const r2=R({g1:'si'});
+si('marca en tema de una sola familia -> marcado_en_una', r2.plantilla==='marcado_en_una' && r2.tema==='Límites' && r2.valores.n===1 && r2.cruces.length===0);
+const r3=R({e1:'si'});
+si('marca en tema que ninguna familia nombra -> marcado_en_ninguna', r3.plantilla==='marcado_en_ninguna' && r3.tema==='Palabra' && r3.valores.n===0);
+const r4=R({g1:'si',e1:'si'});
+si('varias marcas que no cruzan -> ningun_cruce', r4.plantilla==='ningun_cruce' && /Ninguno de los 2 temas/.test(r4.texto));
+const r5=R({c1:'si',b1:'si',d1:'si'});
+si('varias que cruzan -> varios_cruces, primero lo mas marcado', r5.plantilla==='varios_cruces' && r5.cruces.map(x=>x.tema).join()==='Cambio,Libertad,Sensibilidad' && r5.tema==='Cambio' && /^3 de los 3 temas/.test(r5.texto));
+const r6=R({a1:'no',b1:'no',c1:'no',d1:'no',f1:'no',g1:'no',e1:'no'});
+si('todo "no" sobre los temas repetidos -> sin conclusion', r6.plantilla===null && r6.nNo===7 && r6.marcados.length===0);
+const r7=R({g1:'no'});
+si('solo "no" en otro tema -> repetido_no_marcado con el mas repetido', r7.plantilla==='repetido_no_marcado' && r7.tema==='Cambio');
+const r8=R({a2:'si'});
+si('la Luna incierta no se puede marcar', r8.nSi===0 && r8.plantilla===null && r8.excluidos.includes('a2'));
+si('el mismo id en dos tarjetas cuenta una vez', L.resumen(fij.concat([C('Tarot','aritmetica',[{id:'c1',tags:['Cambio']}])]),{c1:'si'}).marcados[0].veces===1);
+si('ninguna plantilla elegida usa la palabra consenso', [r1,r2,r3,r4,r5,r7].every(x=>x.texto && !/consenso|\{/.test(x.texto)));
+// elegir tradiciones sobre una lectura real
+si('8 tradiciones elegibles, todas con origen', L.TRADICIONES.length===8 && L.TRADICIONES.every(t=>L.ORIGENES[t.clave] && L.FAMILIAS[t.familia]));
+si('cada tarjeta de la lectura tiene tradicion elegible', ['nacimiento','hoy','mes','ano'].every(k=>r[k].every(c=>L.tradicionDe(c.trad))));
+const soloZ=L.elegir(r.nacimiento,['zodiaco']);
+si('elegir: lo no elegido no aparece', soloZ.length===1 && soloZ[0].trad==='Astrología occidental');
+si('elegir: sin tarot ni cabala no cambia la familia aritmetica si queda numerologia', L.resumen(L.elegir(r.nacimiento,['zodiaco','numerologia']),{}).max===2);
+// luna incierta en una lectura real: buscar un dia sin hora en que la Luna cambie de signo
+let incierta=null; for(let d=1;d<=31&&!incierta;d++){ const x=L.leer({anio:1990,mes:7,dia:d,hora:'',tz:'America/Havana',palma:{},ahora:Date.UTC(2026,9,10,15)}); const it=x.nacimiento[0].items[1]; if(it.incierto) incierta={d,x,it}; }
+si('hay dias de julio 1990 con Luna incierta y el aviso lo dice', !!incierta && incierta.x.nacimiento[0].items.some(i=>i.k==='Aviso'&&/Luna/.test(i.d)));
+const conHora=L.leer({anio:1990,mes:7,dia:incierta.d,hora:10,min:0,tz:'America/Havana',palma:{},ahora:Date.UTC(2026,9,10,15)});
+si('con hora la Luna deja de ser incierta', !conHora.nacimiento[0].items[1].incierto);
+si('la Luna incierta no se marca en la lectura real', L.resumen(incierta.x.nacimiento,{[incierta.it.id]:'si'}).nSi===0);
+console.log('ejemplo 1990-07-29, marcando el Sol:', L.resumen(r.nacimiento,{[r.nacimiento[0].items[0].id]:'si'}).texto);
 // ---- tabla del azar: se recalcula entera (unos 40 s) y debe coincidir con la guardada ----
 const T=L.TABLA_AZAR, calc=require(require('path').join(__dirname,'../azar_coincidencias.js')).calcular();
 si('TABLA_AZAR guardada', !!T && T.fechas===29585);

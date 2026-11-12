@@ -83,7 +83,7 @@
 
 <section id="lecturas"><div class="ancho">
   <div class="enc aparece"><span class="etq">Miradas antiguas</span><h2>Lecturas</h2><p>Qué dicen varias tradiciones sobre tu fecha de nacimiento, reunidas en un solo lugar y cruzadas entre sí.</p></div>
-  <div class="aviso lec-aviso"><b>Léelo con calma.</b> Esto es una mirada simbólica basada en tradiciones antiguas: astrología, numerología, cábala, tarot y quiromancia. No es una predicción ni un hecho comprobado, y no sustituye consejo médico, psicológico, económico ni legal. No tomes decisiones importantes por lo que diga. Tus datos se calculan en tu propio dispositivo y no se envían a ningún sitio.</div>
+  <div class="aviso lec-aviso"><b>Léelo con calma.</b> Esto es una mirada simbólica basada en tradiciones antiguas: astrología, numerología, cábala, tarot, árboles celtas, día planetario y quiromancia. No es una predicción ni un hecho comprobado, y no sustituye consejo médico, psicológico, económico ni legal. No tomes decisiones importantes por lo que diga. Tus datos se calculan en tu propio dispositivo y no se envían a ningún sitio.</div>
   <form class="vidrio tile lec-form" id="lec-form" novalidate>
     <label for="lec-nombre" style="margin-top:0">Tu nombre completo <span class="nota">(opcional, solo para la numerología)</span></label>
     <input id="lec-nombre" maxlength="80" autocomplete="name">
@@ -102,6 +102,12 @@
       <label for="lec-vida">Línea de la vida (rodea el pulgar)</label>
       <select id="lec-vida"><option value="">No lo sé</option><option value="amplia">Amplia y curva</option><option value="cerrada">Pegada al pulgar</option></select>
     </details>
+    <fieldset class="lec-trads" id="lec-trads">
+      <legend id="lec-trads-titulo">Qué tradiciones mirar</legend>
+      <p class="nota" id="lec-trads-nota"></p>
+      <div class="lec-trads-lista" id="lec-trads-lista"></div>
+      <p class="nota" id="lec-trads-iching"></p>
+    </fieldset>
     <label class="lec-check"><input type="checkbox" id="lec-recordar"> Recordar mis datos en este dispositivo</label>
     <div class="botones" style="justify-content:flex-start"><button class="boton lleno" type="submit">Ver mi lectura</button><button class="boton" type="button" id="lec-borrar">Borrar mis datos</button></div>
     <p class="nota" id="lec-error" role="alert"></p>
@@ -109,12 +115,23 @@
   <div id="lec-resultado" hidden>
     <div id="lec-resumen" class="lec-resumen"></div>
     <div class="selector" id="lec-tabs" role="tablist" aria-label="Periodo de la lectura">
-      <button class="chip" role="tab" data-t="nacimiento" aria-selected="true" type="button">Tu base</button>
-      <button class="chip" role="tab" data-t="hoy" aria-selected="false" type="button">Hoy</button>
-      <button class="chip" role="tab" data-t="mes" aria-selected="false" type="button">Este mes</button>
-      <button class="chip" role="tab" data-t="ano" aria-selected="false" type="button">Este año</button>
+      <button class="chip" role="tab" id="lec-tab-nacimiento" aria-controls="lec-panel" data-t="nacimiento" aria-selected="true" tabindex="0" type="button">Tu base</button>
+      <button class="chip" role="tab" id="lec-tab-hoy" aria-controls="lec-panel" data-t="hoy" aria-selected="false" tabindex="-1" type="button">Hoy</button>
+      <button class="chip" role="tab" id="lec-tab-mes" aria-controls="lec-panel" data-t="mes" aria-selected="false" tabindex="-1" type="button">Este mes</button>
+      <button class="chip" role="tab" id="lec-tab-ano" aria-controls="lec-panel" data-t="ano" aria-selected="false" tabindex="-1" type="button">Este año</button>
     </div>
-    <div class="lec-cuerpo" id="lec-cuerpo"></div>
+    <div id="lec-panel" role="tabpanel" aria-labelledby="lec-tab-nacimiento">
+      <div class="lec-cuerpo" id="lec-cuerpo"></div>
+      <section class="vidrio lec-coin" id="lec-repite" aria-labelledby="lec-repite-titulo">
+        <h3 id="lec-repite-titulo">Lo que se repite y lo que te dice algo</h3>
+        <div id="lec-repite-vivo" aria-live="polite">
+          <div class="lec-parte" id="lec-parte-a"></div>
+          <div class="lec-parte" id="lec-parte-b"></div>
+          <div id="lec-parte-c"></div>
+        </div>
+        <div id="lec-parte-azar"></div>
+      </section>
+    </div>
   </div>
   <div class="vidrio tile lec-iching" id="iching">
     <span class="etq">Otra mirada</span><h3>I Ching</h3>

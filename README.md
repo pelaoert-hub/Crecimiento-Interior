@@ -115,6 +115,24 @@ Limitaciones reales:
 - La asociación de sefirot con números de fecha es una adaptación moderna, no doctrina cabalística tradicional; también se dice en la web.
 - Los textos son interpretaciones generales en revisión. No incluyen predicciones de salud, dinero ni muerte.
 
+### «Lo que se repite y lo que te dice algo»
+
+> **Pendiente: revisión de los textos nuevos (origen, descripciones de temas, conclusiones, avisos del azar y frases de la interfaz en `TEXTOS_UI`) por la persona que decida el autor, ANTES de fusionar en main.** También siguen pendientes de revisión las 33 etiquetas dudosas de `tools/revision_etiquetas_lecturas.md`.
+
+**Qué hace.** Bajo el formulario, la persona elige qué tradiciones mirar (zodiaco occidental, zodiaco chino, árboles celtas, numerología, cábala, tarot, día planetario y, si rellenó la palma, quiromancia); todas vienen marcadas y cada una tiene su «De dónde viene» (`ORIGENES`). Lo que no se elige no se muestra ni cuenta. El I Ching queda aparte: es una tirada al azar y no se cruza con la fecha. Bajo cada texto de las tarjetas (en las cuatro pestañas) hay tres opciones: «Me dice algo», «No me dice nada» y «No sé» (por defecto; no cuenta).
+
+**No es adivinación.** No predice nada ni dice qué significa nada. Solo cuenta coincidencias de etiquetas, y lo dice; la conclusión siempre termina con una pregunta que admite «dejarlo estar».
+
+**Las dos medidas, separadas:**
+1. **Lo que se repite entre tradiciones:** temas que aparecen en 2 o más **familias** distintas de las elegidas («aparece en N de M familias»). Numerología, cábala, tarot y día planetario salen de las mismas cifras de la fecha y cuentan como **una** familia.
+2. **Lo que tú marcaste:** temas de los textos marcados «Me dice algo», con cuántas veces.
+
+La conclusión solo cruza los temas que están en las dos, ordenados primero por lo que marcó la persona, y elige una de las 6 plantillas de `CONCLUSIONES`. Sin marcas no hay conclusión, solo una invitación a marcar sin presión. Toda la lógica está en la función pura `Lecturas.resumen(tarjetasElegidas, marcas)` (y `Lecturas.elegir(tarjetas, claves)`), probada en node; `lecturas-ui.js` solo pinta. Si falta la hora y ese día la Luna cambió de signo, la Luna no se puede marcar ni cuenta, y la tarjeta lo dice. En «Tu base» se muestra una vez el aviso del azar (`AVISOS_AZAR[0]`, y `[1]` con el tema de la conclusión); en las otras pestañas, el aviso del efecto Barnum, porque la tabla del azar solo describe «Tu base».
+
+**Datos.** Todo se calcula en el dispositivo y funciona sin conexión; no se envía nada. Las marcas (`ci_resonancias`, `{idTexto: "si"|"no"}`) y las tradiciones elegidas (`ci_lectura_trads`) se guardan en `localStorage` **solo** si «Recordar mis datos» está marcado; al desmarcarlo o al pulsar «Borrar mis datos» se borran junto con `ci_lectura`. Sin guardar, todo funciona igual durante la visita. Las marcas van por id de texto: si el mismo texto sale en dos pestañas, la marca es la misma.
+
+**Tabla del azar (`TABLA_AZAR`).** Se genera con `node tools/azar_coincidencias.js` (recorre todas las fechas de 1930 a 2010 con el motor real) y se pega en `lecturas.js` entre `TABLA_AZAR_INICIO` y `TABLA_AZAR_FIN`. **Cambiar cualquier etiqueta de tema obliga a regenerarla**; si no, `tools/pruebas/motor_lecturas.js` falla avisando de que no cuadra.
+
 ## Capa Cuba: cómo se contrastó
 
 Estas religiones son de tradición oral: el conocimiento se transmite por iniciación y no hay un texto único que lo recoja. «Contrastado» solo significa que **varias fuentes públicas coinciden**; no lo confirma la propia tradición. La confirmación solo puede venir de practicantes iniciados.

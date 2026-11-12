@@ -266,16 +266,17 @@ function leer(datos){
   nacTs = utcDeLocal(y, m, d, hayHora ? +datos.hora : 12, hayHora ? (+datos.min||0) : 0, tz);
 
   /* astrologia occidental */
-  var solN = signoDeLon(lonSol(nacTs)), lunaN = signoDeLon(lonLuna(nacTs)), avisos = [];
+  var solN = signoDeLon(lonSol(nacTs)), lunaN = signoDeLon(lonLuna(nacTs)), avisos = [], lunaIncierta = false;
   if(!hayHora){
     var ini = utcDeLocal(y, m, d, 0, 0, tz), fin = ini + 86400000;
     var s1 = signoDeLon(lonSol(ini)), s2 = signoDeLon(lonSol(fin)), l1 = signoDeLon(lonLuna(ini)), l2 = signoDeLon(lonLuna(fin));
     if(s1[0] !== s2[0]) avisos.push('Naciste el día en que el Sol cambia de signo (' + s1[0] + ' a ' + s2[0] + '). Con la hora exacta se sabría cuál es el tuyo.');
+    if(l1[0] !== l2[0]) lunaIncierta = true;
     if(l1[0] !== l2[0]) avisos.push('Ese día la Luna cambió de signo (' + l1[0] + ' a ' + l2[0] + '). Sin la hora de nacimiento no se puede saber cuál es la tuya.');
   }
   var astro = carta('Astrología occidental', solN[1], [
     {k: 'Sol en ' + solN[0] + ' (' + solN[2] + ', ' + solN[3] + ')', d: 'Tradicionalmente se asocia con ' + solN[4], tags: solN[6], id: ID(solN)},
-    {k: 'Luna en ' + lunaN[0], d: lunaN[5], tags: lunaN[6], id: ID(lunaN)}
+    {k: 'Luna en ' + lunaN[0], d: lunaN[5], tags: lunaN[6], id: ID(lunaN), incierto: lunaIncierta}
   ].concat(avisos.map(function(a){ return {k: 'Aviso', d: a, tags: []}; })), solN[7]);
   astro.nota = 'Se calcula el Sol y la Luna. El ascendente, las casas y los demás planetas necesitan hora y lugar exactos y tablas astronómicas completas, y aquí no se incluyen.';
 
@@ -458,7 +459,91 @@ function rellenar(plantilla, datos){ return String(plantilla).replace(/\{(\w+)\}
 var TABLA_AZAR = {"rango":["1930-01-01","2010-12-31"],"fechas":29585,"tz":"America/Havana","hora":"12:00 local","paso":1,"maxFamilias":4,"maxFamiliasConPalma":5,"maxObservado":4,"pctConAlguno":99.5,"pctConTres":38.5,"pctConCuatro":1.9,"repetidos":{"p10":2,"mediana":3,"p90":4,"reparto":{"0":0.5,"1":7.2,"2":26.6,"3":36.3,"4":21.4,"5":6.7,"6":1.1,"7":0.1,"8":0}},"temas":{"Iniciativa":{"dos":30.5,"tres":4.4},"Constancia":{"dos":36.9,"tres":6.2},"Cambio":{"dos":19,"tres":2.4},"Soltar":{"dos":9.4,"tres":0.8},"Sensibilidad":{"dos":34.9,"tres":5.6},"Vínculos":{"dos":28.1,"tres":3.1},"Cuidado":{"dos":32.8,"tres":4.8},"Palabra":{"dos":12.5,"tres":0.7},"Creatividad":{"dos":30.4,"tres":6.6},"Introspección":{"dos":27.7,"tres":6.2},"Límites":{"dos":13.5,"tres":0.5},"Libertad":{"dos":20.3,"tres":2.1}}};
 /* TABLA_AZAR_FIN */
 
+/* ---------- fase 2: tradiciones elegibles, marcas y resumen ---------- */
+/* tradiciones que la persona puede elegir. clave = clave de ORIGENES. Quiromancia solo si relleno la palma. */
+var TRADICIONES = [
+ {clave: 'zodiaco', nombre: 'Zodiaco occidental (Sol y Luna)', familia: 'astros'},
+ {clave: 'zodiaco_chino', nombre: 'Zodiaco chino', familia: 'ano_chino'},
+ {clave: 'arboles', nombre: 'Árboles celtas', familia: 'arboles'},
+ {clave: 'numerologia', nombre: 'Numerología', familia: 'aritmetica'},
+ {clave: 'cabala', nombre: 'Cábala', familia: 'aritmetica'},
+ {clave: 'tarot', nombre: 'Tarot', familia: 'aritmetica'},
+ {clave: 'dia_planetario', nombre: 'Día planetario', familia: 'aritmetica'},
+ {clave: 'quiromancia', nombre: 'Quiromancia', familia: 'quiromancia', soloConPalma: true}
+];
+var TRADICION_DE = {
+ 'Astrología occidental': 'zodiaco', 'Astrología china': 'zodiaco_chino', 'Árboles celtas': 'arboles',
+ 'Numerología pitagórica': 'numerologia', 'Numerología personal': 'numerologia', 'Cábala': 'cabala',
+ 'Tarot': 'tarot', 'Día de la semana': 'dia_planetario', 'Quiromancia': 'quiromancia'
+};
+function tradicionDe(trad){ return TRADICION_DE[String(trad).split(' (')[0]] || null; }
+/* filtra tarjetas por las claves de tradicion elegidas (lo no elegido no se muestra ni cuenta) */
+function elegir(tarjetas, claves){ return (tarjetas || []).filter(function(c){ return claves.indexOf(tradicionDe(c.trad)) >= 0; }); }
+
+/* textos nuevos de la interfaz (pendientes de revision, como los de la fase 1) */
+var TEXTOS_UI = {
+ tradiciones_titulo: 'Qué tradiciones mirar',
+ tradiciones_nota: 'Todas se calculan con tu fecha; la quiromancia, con tu palma. Lo que desmarques no se muestra ni cuenta en lo que se repite.',
+ iching_aparte: 'El I Ching, más abajo, es una tirada aparte: ahí manda el azar de las monedas y no se cruza con tu fecha.',
+ de_donde: 'De dónde viene',
+ marca_pregunta: '¿Te dice algo?',
+ marca_si: 'Me dice algo', marca_no: 'No me dice nada', marca_nose: 'No sé',
+ luna_incierta: 'Sin la hora de nacimiento no se sabe con certeza el signo de la Luna, así que este texto no se puede marcar ni cuenta en lo que se repite.',
+ repite_titulo: 'Lo que se repite entre tradiciones',
+ marcado_titulo: 'Lo que tú marcaste',
+ aparece_en: 'aparece en {n} de {max} familias',
+ marcado_veces: 'lo marcaste en {n} texto{s}',
+ sin_marcas: 'No has marcado ninguna tarjeta como «Me dice algo». Si alguna te lo dice, puedes marcarla debajo de su texto; si no, también está bien.',
+ una_familia: 'Para ver qué se repite hacen falta al menos dos familias de tradiciones.',
+ nada_repetido: 'Aquí cada tradición mira algo distinto y no hay temas que se repitan.',
+ pestana_vacia: 'Con las tradiciones que elegiste no hay nada que mostrar en esta pestaña.'
+};
+
+/* resumen: funcion PURA. Cruza lo que se repite entre familias (de las tarjetas elegidas) con lo que la
+   persona marco. marcas = {idTexto: 'si'|'no'}; "No se" = sin entrada. Los textos con incierto (Luna sin hora)
+   no cuentan ni se pueden marcar. Devuelve la estructura para pintar y la plantilla de CONCLUSIONES elegida. */
+function resumen(tarjetas, marcas){
+  tarjetas = tarjetas || []; marcas = marcas || {};
+  var limpias = tarjetas.map(function(c){
+    var tags = []; (c.items || []).forEach(function(i){ if(i.incierto) return; (i.tags || []).forEach(function(t){ if(tags.indexOf(t) < 0) tags.push(t); }); });
+    return {trad: c.trad, familia: c.familia || familiaDe(c.trad), tags: tags};
+  });
+  var co = coincidenciasPorFamilia(limpias), porTema = {};
+  co.temas.forEach(function(t){ porTema[t.tema] = t; });
+  var repetidos = co.temas.filter(function(t){ return t.n >= 2; });
+  var vistos = {}, nSi = 0, nNo = 0, veces = {}, temasNo = {}, excluidos = [];
+  tarjetas.forEach(function(c){ (c.items || []).forEach(function(i){
+    if(!i.id || vistos[i.id]) return; vistos[i.id] = true;
+    if(i.incierto){ excluidos.push(i.id); return; }
+    var m = marcas[i.id];
+    if(m === 'si'){ nSi++; (i.tags || []).forEach(function(t){ veces[t] = (veces[t] || 0) + 1; }); }
+    else if(m === 'no'){ nNo++; (i.tags || []).forEach(function(t){ temasNo[t] = true; }); }
+  }); });
+  var idx = function(t){ return TEMAS.indexOf(t); };
+  var marcados = TEMAS.filter(function(t){ return veces[t]; }).map(function(t){ return {tema: t, veces: veces[t], n: porTema[t] ? porTema[t].n : 0}; })
+    .sort(function(a, b){ return b.veces - a.veces || b.n - a.n || idx(a.tema) - idx(b.tema); });
+  var cruces = marcados.filter(function(m){ return m.n >= 2; });
+  var plantilla = null, v = {max: co.maxFamilias, marcas: marcados.length, cruces: cruces.length};
+  if(nSi > 0){
+    if(cruces.length >= 2){ plantilla = 'varios_cruces'; v.tema = cruces[0].tema; v.n = cruces[0].n; }
+    else if(cruces.length === 1){ plantilla = 'marcado_repetido'; v.tema = cruces[0].tema; v.n = cruces[0].n; }
+    else if(marcados.length === 1){ v.tema = marcados[0].tema; v.n = marcados[0].n; plantilla = v.n === 0 ? 'marcado_en_ninguna' : 'marcado_en_una'; }
+    else plantilla = 'ningun_cruce';
+  } else if(nNo > 0){
+    var libre = repetidos.filter(function(t){ return !temasNo[t.tema]; })[0];
+    if(libre){ plantilla = 'repetido_no_marcado'; v.tema = libre.tema; v.n = libre.n; }
+  }
+  return {
+    max: co.maxFamilias, familiasPresentes: co.familiasPresentes,
+    repetidos: repetidos.map(function(t){ return {tema: t.tema, n: t.n, familias: t.familias, etiquetas: t.etiquetas}; }),
+    marcados: marcados, cruces: cruces, nSi: nSi, nNo: nNo, excluidos: excluidos,
+    plantilla: plantilla, valores: v, tema: v.tema || null,
+    texto: plantilla ? rellenar(CONCLUSIONES[plantilla], v) : ''
+  };
+}
+
 raiz.Lecturas = {leer: leer, coincidencias: coincidencias, coincidenciasPorFamilia: coincidenciasPorFamilia, catalogo: catalogo,
+  TRADICIONES: TRADICIONES, tradicionDe: tradicionDe, elegir: elegir, resumen: resumen, TEXTOS_UI: TEXTOS_UI,
   TEMAS: TEMAS, DESCRIPCION_TEMAS: DESCRIPCION_TEMAS, FAMILIAS: FAMILIAS, familiaDe: familiaDe, NOMBRE_SECCION: NOMBRE_SECCION,
   ORIGENES: ORIGENES, CONCLUSIONES: CONCLUSIONES, AVISOS_AZAR: AVISOS_AZAR, rellenar: rellenar, TABLA_AZAR: TABLA_AZAR, _t: {arbolDe: arbolDe, lonSol: lonSol, lonLuna: lonLuna, anoNuevoChino: anoNuevoChino, caminoDeVida: caminoDeVida, sumaNombre: sumaNombre, esVocal: esVocal, red: red, arcanosDe: arcanosDe, utcDeLocal: utcDeLocal, proximaFase: proximaFase, elong: elong, T_de: T_de}};
 })(typeof window !== 'undefined' ? window : globalThis);
