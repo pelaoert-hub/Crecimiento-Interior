@@ -1,0 +1,54 @@
+# Mantener activa la base de datos de las Velas de Anima (Supabase).
+#
+# Que hace: una vez al dia hace UNA consulta de lectura muy pequena a la API
+# de Supabase. Supabase pausa los proyectos del plan gratuito con poca actividad
+# en 7 dias; esta consulta es esa actividad.
+# Si la base de datos no responde (o responde con un error), la tarea FALLA y
+# GitHub avisa por correo al dueno del repositorio y la marca en rojo en Actions.
+#
+# Nota: la clave de abajo es la clave PUBLICABLE de Supabase. Es publica por
+# diseno (ya esta publicada en config.js y viaja en la web). Solo permite lo que
+# las politicas RLS dejan hacer a un visitante anonimo: leer velas aprobadas.
+# No es un secreto, por eso va en claro y no se usan secretos de GitHub.
+name: Mantener activa la base de datos
+
+on:
+  schedule:
+    # Cada dia a las 06:17 UTC (hora poco habitual para no coincidir con
+    # el pico de tareas programadas de GitHub, que a veces las retrasa).
+    - cron: '17 6 * * *'
+  # Permite lanzarla a mano: pestana Actions > este flujo > Run workflow.
+  workflow_dispatch:
+
+# Sin permisos sobre el repositorio: la tarea no lee ni escribe nada de el.
+permissions: {}
+
+jobs:
+  consulta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      SUPABASE_URL: https://vxnaztujvdbhbgherpoa.supabase.co
+      SUPABASE_PUBLISHABLE_KEY: sb_publishable_VOxGQkz0kC6G6shMdmt-bA_5OwvRAuk
+    steps:
+      - name: Consultar la tabla de velas (solo lectura)
+        shell: bash
+        run: |
+          set -euo pipefail
+          # -sS: silencioso pero muestra errores. --fail: sale con error si el
+          # codigo HTTP es 400 o mas. -o /dev/null: no guarda ni muestra el
+          # cuerpo. -w: imprime solo el codigo de estado (nunca la clave).
+          codigo=$(curl -sS --fail --max-time 30 \
+            -o /dev/null -w '%{http_code}' \
+            -H "apikey: ${SUPABASE_PUBLISHABLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_PUBLISHABLE_KEY}" \
+            "${SUPABASE_URL}/rest/v1/comunidad_mensajes?select=id&limit=1") || {
+            echo "::error::La consulta a Supabase fallo (sin respuesta o con error HTTP). Puede estar pausado: restaurarlo en el panel de Supabase."
+            exit 1
+          }
+          echo "Codigo de estado de Supabase: ${codigo}"
+          if [ "${codigo}" != "200" ]; then
+            echo "::error::Supabase no respondio 200 (respondio ${codigo}). Puede estar pausado: restaurarlo en el panel de Supabase."
+            exit 1
+          fi
+          echo "La base de datos responde."
