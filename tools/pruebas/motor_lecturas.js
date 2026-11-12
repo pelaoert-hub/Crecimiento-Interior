@@ -40,8 +40,8 @@ console.log('por familia 1990-07-29:',cf2.temas.filter(t=>t.n>=2).map(t=>t.tema+
 // ---- textos nuevos ----
 si('origen para las 8 tradiciones del cruce y el I Ching', ['zodiaco','zodiaco_chino','arboles','numerologia','cabala','tarot','dia_planetario','quiromancia','iching'].every(k=>L.ORIGENES[k]&&L.ORIGENES[k].length>40));
 const concl=Object.values(L.CONCLUSIONES);
-si('6 conclusiones que terminan en pregunta abierta con "dejarlo estar"', concl.length===6 && concl.every(c=>/dejarlo estar\?$/.test(c)));
-const todos=[L.NOMBRE_SECCION].concat(concl,L.AVISOS_AZAR,Object.values(L.ORIGENES),Object.values(L.DESCRIPCION_TEMAS)).join(' ');
+si('5 conclusiones que terminan en pregunta abierta con "dejarlo estar"; ninguna propone un tema no marcado', concl.length===5 && !Object.keys(L.CONCLUSIONES).some(k=>/no_marcado/.test(k)) && concl.every(c=>/dejarlo estar\?$/.test(c)));
+const todos=[L.NOMBRE_SECCION,L.TEXTOS_UI.solo_no,L.TEXTOS_UI.incierto_hora].concat(concl,L.AVISOS_AZAR,Object.values(L.ORIGENES),Object.values(L.DESCRIPCION_TEMAS)).join(' ');
 si('sin "consenso" ni lenguaje de prediccion', !/consenso|predic|destino|te pasará|ocurrirá|seguro que/i.test(todos));
 si('rellenar plantillas', L.rellenar(L.CONCLUSIONES.marcado_repetido,{tema:'Cambio',n:3,max:4})==='Marcaste «Cambio» y ese tema aparece en 3 de las 4 familias que miraste. No anuncia nada: es un tema que hoy te llamó la atención. ¿Hay algo pequeño que querrías mirar más de cerca esta semana, o prefieres dejarlo estar?');
 // ---- fase 2: elegir tradiciones y resumen (marcas + coincidencia) con tarjetas fijas ----
@@ -74,11 +74,16 @@ si('varias que cruzan -> varios_cruces, primero lo mas marcado', r5.plantilla===
 const r6=R({a1:'no',b1:'no',c1:'no',d1:'no',f1:'no',g1:'no',e1:'no'});
 si('todo "no" sobre los temas repetidos -> sin conclusion', r6.plantilla===null && r6.nNo===7 && r6.marcados.length===0);
 const r7=R({g1:'no'});
-si('solo "no" en otro tema -> repetido_no_marcado con el mas repetido', r7.plantilla==='repetido_no_marcado' && r7.tema==='Cambio');
+si('solo "no" en un texto -> no hay conclusion (no se propone un tema que la persona no eligio)', r7.plantilla===null && r7.texto==='' && r7.tema===null && r7.nSi===0 && r7.nNo===1 && r7.marcados.length===0);
+si('"no" en varios textos y ningun "si" -> tampoco hay conclusion', R({g1:'no',c1:'no',e1:'no'}).plantilla===null && R({g1:'no',c1:'no',e1:'no'}).texto==='');
+si('un "si" con otros "no" -> la conclusion de siempre', R({c1:'si',g1:'no',e1:'no'}).plantilla==='marcado_repetido' && R({c1:'si',g1:'no'}).tema==='Cambio');
+const SN=L.TEXTOS_UI.solo_no, SM=L.TEXTOS_UI.sin_marcas;
+si('frase para "solo marcaste No me dice nada": sobria, dice que esta bien y que lo repetido es un dato de las tradiciones', /Me dice algo/.test(SN) && /está bien/.test(SN) && /dato sobre las tradiciones, no sobre ti\.$/.test(SN) && SN!==SM && !/\?/.test(SN));
+si('esa frase no empuja ni promete (sin imperativos de accion, urgencia ni prediccion)', !/deberías|debes|prueba|intenta|inténtalo|ahora mismo|no te pierdas|descubre|consenso|predic|destino|ocurrirá|te pasará/i.test(SN));
 const r8=R({a2:'si'});
 si('la Luna incierta no se puede marcar', r8.nSi===0 && r8.plantilla===null && r8.excluidos.includes('a2'));
 si('el mismo id en dos tarjetas cuenta una vez', L.resumen(fij.concat([C('Tarot','aritmetica',[{id:'c1',tags:['Cambio']}])]),{c1:'si'}).marcados[0].veces===1);
-si('ninguna plantilla elegida usa la palabra consenso', [r1,r2,r3,r4,r5,r7].every(x=>x.texto && !/consenso|\{/.test(x.texto)));
+si('ninguna plantilla elegida usa la palabra consenso', [r1,r2,r3,r4,r5].every(x=>x.texto && !/consenso|\{/.test(x.texto)));
 // elegir tradiciones sobre una lectura real
 si('8 tradiciones elegibles, todas con origen', L.TRADICIONES.length===8 && L.TRADICIONES.every(t=>L.ORIGENES[t.clave] && L.FAMILIAS[t.familia]));
 si('cada tarjeta de la lectura tiene tradicion elegible', ['nacimiento','hoy','mes','ano'].every(k=>r[k].every(c=>L.tradicionDe(c.trad))));
@@ -109,6 +114,13 @@ const rAmb=L.resumen(amb.nacimiento,{[ai[0].id]:'si',[ai[1].id]:'si'});
 si('Sol y Luna inciertos: no se marcan y el cruce sigue funcionando con las demas familias', rAmb.nSi===0 && rAmb.excluidos.length===2 && rAmb.max===4 && Array.isArray(rAmb.repetidos));
 si('Sol incierto y Luna cierta con el mismo id: la Luna cuenta y se puede marcar', (()=>{ const cs=[C('Astrología occidental','astros',[{id:'s1',tags:['Cambio'],incierto:true},{id:'s1',tags:['Cambio']}]),C('Astrología china','ano_chino',[{id:'z1',tags:['Cambio']}])]; const x=L.resumen(cs,{s1:'si'}); return x.nSi===1 && x.excluidos.length===1 && x.plantilla==='marcado_repetido'; })());
 si('frase del Sol incierto: dice Sol, no se puede marcar y no cuenta', /signo del Sol/.test(L.TEXTOS_UI.sol_incierto) && /no se puede marcar/.test(L.TEXTOS_UI.sol_incierto) && /no se puede marcar/.test(L.TEXTOS_UI.luna_incierta));
+// ---- la linea de resumen ("Sol en...", "Luna en...") sabe cuando el Sol o la Luna son inciertos por falta de la hora ----
+si('23-ago-1990 sin hora: resumen.solIncierto true y lunaIncierta false', solD.resumen.solIncierto===true && solD.resumen.lunaIncierta===false);
+si('23-ago-1990 con hora: ninguno incierto en el resumen', solH.resumen.solIncierto===false && solH.resumen.lunaIncierta===false);
+si('22-jul-1990 sin hora: Sol y Luna inciertos en el resumen', amb.resumen.solIncierto===true && amb.resumen.lunaIncierta===true);
+si('un dia sin cambio de signo: el resumen no marca ninguno como incierto', leerAst(8,24).resumen.solIncierto===false && leerAst(8,24).resumen.lunaIncierta===false);
+si('el resumen incierto coincide con los items de la tarjeta (una sola deteccion)', [solD,solH,amb,leerAst(8,24),incierta.x,conHora].every(x=>x.resumen.solIncierto===x.nacimiento[0].items[0].incierto && x.resumen.lunaIncierta===x.nacimiento[0].items[1].incierto));
+si('el signo del resumen no cambia por ser incierto (mismo calculo) y la etiqueta es la pedida', solD.resumen.solN===solH.resumen.solN && L.TEXTOS_UI.incierto_hora==='incierto sin la hora');
 // ---- decision 1: la linea del azar con cifras solo cuando es exacta ----
 const FECHA=['zodiaco','zodiaco_chino','arboles','numerologia','cabala','tarot','dia_planetario'], TODAS8=FECHA.concat(['quiromancia']);
 si('azarExacto: las 7 tradiciones de la fecha, sin nombre ni palma -> true', L.azarExacto(FECHA,false,false)===true);
@@ -126,7 +138,7 @@ si('la version sin cifras no tiene numeros ni huecos, no nombra el tema y no dic
 // revision critica 12/11/2026: con una sola familia no hay conclusion (evita "1 de las 1 familias")
 const unaFam=[C('Astrología china','ano_chino',[{id:'u1',tags:['Cambio']}])];
 si('una sola familia: sin conclusion aunque haya marcas', L.resumen(unaFam,{u1:'si'}).plantilla===null && L.resumen(unaFam,{u1:'si'}).texto==='' && L.resumen(unaFam,{u1:'no'}).plantilla===null);
-si('ninguna conclusion posible dice "1 de las 1" ni "0 de"', [r1,r2,r3,r4,r5,r7].every(x=>!/\b1 de las 1\b|\b0 de las\b/.test(x.texto)));
+si('ninguna conclusion posible dice "1 de las 1" ni "0 de"', [r1,r2,r3,r4,r5].every(x=>!/\b1 de las 1\b|\b0 de las\b/.test(x.texto)));
 si('sin lenguaje de prediccion en los textos nuevos', !/consenso|predic|destino|te pasará|ocurrirá|seguro que/i.test([L.AVISO_AZAR_SIN_CIFRAS,L.TEXTOS_UI.sol_incierto].join(' ')));
 const rN=L.leer({nombre:'Ana María Pérez',anio:1990,mes:7,dia:29,hora:'',tz:'America/Havana',palma:{},ahora:Date.UTC(2026,9,10,15)}).resumen;
 const rP=L.leer({nombre:'',anio:1990,mes:7,dia:29,hora:'',tz:'America/Havana',palma:{vida:'amplia'},ahora:Date.UTC(2026,9,10,15)}).resumen;

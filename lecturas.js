@@ -369,7 +369,7 @@ function leer(datos){
     carta('Astrología china', '☯', [{k: 'Año actual: ' + anH[0] + ' de ' + elH[0], d: 'Se asocia con ' + anH[1] + '. ' + relCh, tags: anH[2], id: ID(anH)}])
   ];
 
-  return {nacimiento: tarjetasNac, hoy: hoy, mes: mes, ano: ano, resumen: {conNombre: conNombre, conPalma: pItems.length > 0, solN: solN[0], lunaN: lunaN[0], animal: an[0] + ' de ' + el[0], camino: cam, persAnio: persAnio, persMes: persMes, persDia: persDia}};
+  return {nacimiento: tarjetasNac, hoy: hoy, mes: mes, ano: ano, resumen: {conNombre: conNombre, conPalma: pItems.length > 0, solN: solN[0], lunaN: lunaN[0], solIncierto: solIncierto, lunaIncierta: lunaIncierta, animal: an[0] + ' de ' + el[0], camino: cam, persAnio: persAnio, persMes: persMes, persDia: persDia}};
 }
 
 /* ---------- lo que se repite entre tradiciones ---------- */
@@ -434,14 +434,15 @@ var ORIGENES = {
 
 /* plantillas de conclusion. Huecos: {tema}, {n} (familias con el tema), {max} (familias miradas),
    {marcas} (temas que marco la persona), {cruces} (temas marcados que tambien se repiten).
-   Todas terminan en una pregunta abierta que admite dejarlo estar. */
+   Todas terminan en una pregunta abierta que admite dejarlo estar.
+   Solo hay conclusion cuando la persona marco algun texto como "Me dice algo": lo que la persona marca es lo que
+   cuenta, asi que la herramienta nunca le propone un tema que no eligio (12/11/2026: se quito la conclusion que lo hacia). */
 var CONCLUSIONES = {
  marcado_repetido: 'Marcaste «{tema}» y ese tema aparece en {n} de las {max} familias que miraste. No anuncia nada: es un tema que hoy te llamó la atención. ¿Hay algo pequeño que querrías mirar más de cerca esta semana, o prefieres dejarlo estar?',
  varios_cruces: '{cruces} de los {marcas} temas que marcaste también se repiten entre las tradiciones; el que más marcaste, «{tema}», aparece en {n} de las {max} familias. Que coincidan no lo vuelve un aviso ni una certeza. ¿Te apetece quedarte un rato con uno de ellos, o prefieres dejarlo estar?',
  marcado_en_una: 'Marcaste «{tema}» y solo aparece en {n} de las {max} familias. Que te llamara la atención a ti ya es un dato, y no hace falta que las tradiciones coincidan contigo. ¿Qué te hizo fijarte en él, o prefieres dejarlo estar?',
  marcado_en_ninguna: 'Marcaste «{tema}» y ninguna de las {max} familias que miraste lo nombra. Eso no le quita valor: lo trajiste tú. ¿Qué tiene este tema para ti ahora mismo, o prefieres dejarlo estar?',
- ningun_cruce: 'Ninguno de los {marcas} temas que marcaste coincide con lo que repiten las tradiciones. También es un resultado válido: lo que hoy te importa no tiene por qué salir de una fecha. ¿Quieres quedarte con alguno de tus temas para pensarlo con calma, o prefieres dejarlo estar?',
- repetido_no_marcado: 'Las tradiciones repiten «{tema}» en {n} de las {max} familias, pero tú no lo marcaste. Que algo se repita aquí es frecuente y no te obliga a nada. ¿Te dice algo al verlo escrito, o prefieres dejarlo estar?'
+ ningun_cruce: 'Ninguno de los {marcas} temas que marcaste coincide con lo que repiten las tradiciones. También es un resultado válido: lo que hoy te importa no tiene por qué salir de una fecha. ¿Quieres quedarte con alguno de tus temas para pensarlo con calma, o prefieres dejarlo estar?'
 };
 
 /* avisos del azar: describen como funciona la herramienta. Huecos: {desde}, {hasta}, {mediana}, {tema}, {pctTema}.
@@ -501,6 +502,8 @@ var TEXTOS_UI = {
  aparece_en: 'aparece en {n} de {max} familias',
  marcado_veces: 'lo marcaste en {n} texto{s}',
  sin_marcas: 'No has marcado ningún texto como «Me dice algo». Si alguno te lo dice, puedes marcarlo justo debajo; si no, también está bien.',
+ solo_no: 'No has marcado ningún texto como «Me dice algo», y está bien. Lo que se repite entre tradiciones es solo un dato sobre las tradiciones, no sobre ti.',
+ incierto_hora: 'incierto sin la hora',
  una_familia: 'Para ver qué se repite hacen falta al menos dos familias de tradiciones.',
  nada_repetido: 'Aquí cada tradición mira algo distinto y no hay temas que se repitan.',
  pestana_vacia: 'Con las tradiciones que elegiste no hay nada que mostrar en esta pestaña.'
@@ -529,7 +532,7 @@ function textoAzar(claves, hayNombre, hayPalma, tema){
 }
 
 /* resumen: funcion PURA. Cruza lo que se repite entre familias (de las tarjetas elegidas) con lo que la
-   persona marco. marcas = {idTexto: 'si'|'no'}; "No se" = sin entrada. Los textos con incierto (Luna sin hora)
+   persona marco. marcas = {idTexto: 'si'|'no'}; "No se" = sin entrada. Sin ningun 'si' no hay conclusion. Los textos con incierto (Luna sin hora)
    no cuentan ni se pueden marcar. Devuelve la estructura para pintar y la plantilla de CONCLUSIONES elegida. */
 function resumen(tarjetas, marcas){
   tarjetas = tarjetas || []; marcas = marcas || {};
@@ -540,14 +543,14 @@ function resumen(tarjetas, marcas){
   var co = coincidenciasPorFamilia(limpias), porTema = {};
   co.temas.forEach(function(t){ porTema[t.tema] = t; });
   var repetidos = co.temas.filter(function(t){ return t.n >= 2; });
-  var vistos = {}, nSi = 0, nNo = 0, veces = {}, temasNo = {}, excluidos = [];
+  var vistos = {}, nSi = 0, nNo = 0, veces = {}, excluidos = [];
   tarjetas.forEach(function(c){ (c.items || []).forEach(function(i){
     if(!i.id) return;
     if(i.incierto){ excluidos.push(i.id); return; }
     if(vistos[i.id]) return; vistos[i.id] = true;
     var m = marcas[i.id];
     if(m === 'si'){ nSi++; (i.tags || []).forEach(function(t){ veces[t] = (veces[t] || 0) + 1; }); }
-    else if(m === 'no'){ nNo++; (i.tags || []).forEach(function(t){ temasNo[t] = true; }); }
+    else if(m === 'no') nNo++;
   }); });
   var idx = function(t){ return TEMAS.indexOf(t); };
   var marcados = TEMAS.filter(function(t){ return veces[t]; }).map(function(t){ return {tema: t, veces: veces[t], n: porTema[t] ? porTema[t].n : 0}; })
@@ -561,10 +564,8 @@ function resumen(tarjetas, marcas){
     else if(cruces.length === 1){ plantilla = 'marcado_repetido'; v.tema = cruces[0].tema; v.n = cruces[0].n; }
     else if(marcados.length === 1){ v.tema = marcados[0].tema; v.n = marcados[0].n; plantilla = v.n === 0 ? 'marcado_en_ninguna' : 'marcado_en_una'; }
     else plantilla = 'ningun_cruce';
-  } else if(nNo > 0){
-    var libre = repetidos.filter(function(t){ return !temasNo[t.tema]; })[0];
-    if(libre){ plantilla = 'repetido_no_marcado'; v.tema = libre.tema; v.n = libre.n; }
   }
+  /* sin ningun "Me dice algo" no hay conclusion, tampoco si solo hay "No me dice nada" */
   return {
     max: co.maxFamilias, familiasPresentes: co.familiasPresentes,
     repetidos: repetidos.map(function(t){ return {tema: t.tema, n: t.n, familias: t.familias, etiquetas: t.etiquetas}; }),

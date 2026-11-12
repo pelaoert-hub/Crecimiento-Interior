@@ -80,7 +80,7 @@ function actualizarRepite(){
   if(r.familiasPresentes.indexOf('aritmetica') >= 0) a += '<p class="nota">'+esc(L.AVISOS_AZAR[2])+'</p>';
   var b = '<h4>'+esc(T.marcado_titulo)+'</h4>';
   b += r.marcados.length ? '<ul>'+r.marcados.map(function(x){ return '<li><b>'+esc(x.tema)+'</b> · '+esc(L.rellenar(T.marcado_veces, {n: x.veces, s: x.veces === 1 ? '' : 's'}))+'</li>'; }).join('')+'</ul>'
-                         : '<p class="nota">'+esc(T.sin_marcas)+'</p>';
+                         : '<p class="nota">'+esc(r.nNo > 0 ? T.solo_no : T.sin_marcas)+'</p>';
   poner('lec-parte-a', a); poner('lec-parte-b', b);
   poner('lec-parte-c', r.texto ? '<p class="lec-concl">'+esc(r.texto)+'</p>' : '');
   var azar;
@@ -100,7 +100,8 @@ function pintar(){
   if(t.length) actualizarRepite();
 }
 function resumenHTML(R, nombre){
-  var chips = ['Sol en '+R.solN, 'Luna en '+R.lunaN, R.animal, 'Camino de vida '+R.camino];
+  /* sin la hora, el dia en que el Sol o la Luna cambian de signo no se sabe cual es: la linea lo dice en vez de darlo por seguro */
+  var chips = ['Sol en '+R.solN+(R.solIncierto ? ' ('+T.incierto_hora+')' : ''), 'Luna en '+R.lunaN+(R.lunaIncierta ? ' ('+T.incierto_hora+')' : ''), R.animal, 'Camino de vida '+R.camino];
   return '<h3>'+(nombre ? 'Lectura para '+esc(nombre) : 'Tu lectura')+'</h3><div class="selector">'+chips.map(function(c){ return '<span class="chip" style="cursor:default">'+esc(c)+'</span>'; }).join('')+'</div>';
 }
 
