@@ -91,6 +91,43 @@ si('hay dias de julio 1990 con Luna incierta y el aviso lo dice', !!incierta && 
 const conHora=L.leer({anio:1990,mes:7,dia:incierta.d,hora:10,min:0,tz:'America/Havana',palma:{},ahora:Date.UTC(2026,9,10,15)});
 si('con hora la Luna deja de ser incierta', !conHora.nacimiento[0].items[1].incierto);
 si('la Luna incierta no se marca en la lectura real', L.resumen(incierta.x.nacimiento,{[incierta.it.id]:'si'}).nSi===0);
+// ---- decision 2: el Sol se trata igual que la Luna el dia en que cambia de signo y falta la hora ----
+const leerAst=(m,d,h)=>L.leer({anio:1990,mes:m,dia:d,hora:h==null?'':h,min:0,tz:'America/Havana',palma:{},ahora:Date.UTC(2026,9,10,15)});
+const solD=leerAst(8,23), solH=leerAst(8,23,10), ast=solD.nacimiento[0].items;
+si('23-ago-1990 sin hora: el Sol es incierto (cuerpo "sol") y la Luna no', ast[0].incierto===true && ast[0].cuerpo==='sol' && ast[1].incierto===false && ast[1].cuerpo==='luna');
+si('23-ago-1990 sin hora: el aviso del Sol sigue estando una sola vez', ast.filter(i=>i.k==='Aviso'&&/Sol cambia de signo/.test(i.d)).length===1);
+si('23-ago-1990 con hora: ni el Sol ni la Luna son inciertos', solH.nacimiento[0].items.every(i=>!i.incierto));
+si('20-mar-1990 sin hora: Sol incierto (Piscis a Aries)', leerAst(3,20).nacimiento[0].items[0].incierto===true);
+si('un dia sin cambio de signo: ni Sol ni Luna inciertos', leerAst(8,24).nacimiento[0].items.every(i=>!i.incierto));
+const rSol=L.resumen(solD.nacimiento,{[ast[0].id]:'si'});
+si('el Sol incierto no se puede marcar', rSol.nSi===0 && rSol.plantilla===null && rSol.excluidos.includes(ast[0].id));
+const sinSol=solD.nacimiento.map((c,i)=>i===0?Object.assign({},c,{items:c.items.filter((x,k)=>k!==0)}):c);
+si('el Sol incierto no cuenta en lo que se repite (igual que si no estuviera)', JSON.stringify(L.resumen(solD.nacimiento,{}).repetidos)===JSON.stringify(L.resumen(sinSol,{}).repetidos));
+const amb=leerAst(7,22), ai=amb.nacimiento[0].items;
+si('22-jul-1990 sin hora: Sol y Luna inciertos a la vez, se tratan igual', ai[0].incierto && ai[1].incierto);
+const rAmb=L.resumen(amb.nacimiento,{[ai[0].id]:'si',[ai[1].id]:'si'});
+si('Sol y Luna inciertos: no se marcan y el cruce sigue funcionando con las demas familias', rAmb.nSi===0 && rAmb.excluidos.length===2 && rAmb.max===4 && Array.isArray(rAmb.repetidos));
+si('Sol incierto y Luna cierta con el mismo id: la Luna cuenta y se puede marcar', (()=>{ const cs=[C('Astrología occidental','astros',[{id:'s1',tags:['Cambio'],incierto:true},{id:'s1',tags:['Cambio']}]),C('Astrología china','ano_chino',[{id:'z1',tags:['Cambio']}])]; const x=L.resumen(cs,{s1:'si'}); return x.nSi===1 && x.excluidos.length===1 && x.plantilla==='marcado_repetido'; })());
+si('frase del Sol incierto: dice Sol, no se puede marcar y no cuenta', /signo del Sol/.test(L.TEXTOS_UI.sol_incierto) && /no se puede marcar/.test(L.TEXTOS_UI.sol_incierto) && /no se puede marcar/.test(L.TEXTOS_UI.luna_incierta));
+// ---- decision 1: la linea del azar con cifras solo cuando es exacta ----
+const FECHA=['zodiaco','zodiaco_chino','arboles','numerologia','cabala','tarot','dia_planetario'], TODAS8=FECHA.concat(['quiromancia']);
+si('azarExacto: las 7 tradiciones de la fecha, sin nombre ni palma -> true', L.azarExacto(FECHA,false,false)===true);
+si('azarExacto: con quiromancia marcada pero sin palma rellena -> true', L.azarExacto(TODAS8,false,false)===true);
+si('azarExacto: una tradicion desmarcada -> false (una por una)', FECHA.every(k=>L.azarExacto(FECHA.filter(x=>x!==k),false,false)===false));
+si('azarExacto: con nombre -> false', L.azarExacto(FECHA,true,false)===false && L.azarExacto(TODAS8,true,false)===false);
+si('azarExacto: con palma y quiromancia en la cuenta -> false', L.azarExacto(TODAS8,false,true)===false);
+si('azarExacto: palma rellena pero quiromancia desmarcada -> true (la palma no entra en la cuenta)', L.azarExacto(FECHA,false,true)===true);
+si('azarExacto: sin tradiciones o sin argumentos -> false', L.azarExacto([],false,false)===false && L.azarExacto()===false);
+const exacto=L.textoAzar(FECHA,false,false,'Cambio'), sinCif=L.textoAzar(FECHA.slice(1),false,false,'Cambio');
+si('textoAzar exacto: lleva la mediana y el porcentaje del tema de la tabla', exacto.includes('la persona típica tiene '+L.TABLA_AZAR.repetidos.mediana+'.') && exacto.includes('A '+Math.round(L.TABLA_AZAR.temas.Cambio.dos)+' de cada 100 fechas') && exacto.includes('«Cambio»'));
+si('textoAzar exacto sin tema: solo la primera frase con cifra', L.textoAzar(FECHA,false,false,null)===L.rellenar(L.AVISOS_AZAR[0],{mediana:L.TABLA_AZAR.repetidos.mediana}));
+si('textoAzar no exacto (tradicion desmarcada, nombre o palma): version sin cifras, igual en los tres casos', sinCif===L.AVISO_AZAR_SIN_CIFRAS && L.textoAzar(FECHA,true,false,'Cambio')===sinCif && L.textoAzar(TODAS8,false,true,'Cambio')===sinCif);
+si('la version sin cifras no tiene numeros ni huecos, no nombra el tema y empieza como la de cifras', !/\d|\{|Cambio|consenso/i.test(L.AVISO_AZAR_SIN_CIFRAS) && L.AVISO_AZAR_SIN_CIFRAS.startsWith('En fechas elegidas al azar, casi todo el mundo tiene varios temas repetidos.'));
+si('sin lenguaje de prediccion en los textos nuevos', !/consenso|predic|destino|te pasará|ocurrirá|seguro que/i.test([L.AVISO_AZAR_SIN_CIFRAS,L.TEXTOS_UI.sol_incierto].join(' ')));
+const rN=L.leer({nombre:'Ana María Pérez',anio:1990,mes:7,dia:29,hora:'',tz:'America/Havana',palma:{},ahora:Date.UTC(2026,9,10,15)}).resumen;
+const rP=L.leer({nombre:'',anio:1990,mes:7,dia:29,hora:'',tz:'America/Havana',palma:{vida:'amplia'},ahora:Date.UTC(2026,9,10,15)}).resumen;
+const rV=L.leer({nombre:'A',anio:1990,mes:7,dia:29,hora:'',tz:'America/Havana',palma:{corazon:''},ahora:Date.UTC(2026,9,10,15)}).resumen;
+si('leer informa si hay nombre (2 o mas letras, como usa la numerologia) y si hay palma', rN.conNombre===true && rN.conPalma===false && rP.conNombre===false && rP.conPalma===true && rV.conNombre===false && rV.conPalma===false);
 console.log('ejemplo 1990-07-29, marcando el Sol:', L.resumen(r.nacimiento,{[r.nacimiento[0].items[0].id]:'si'}).texto);
 // ---- tabla del azar: se recalcula entera (unos 40 s) y debe coincidir con la guardada ----
 const T=L.TABLA_AZAR, calc=require(require('path').join(__dirname,'../azar_coincidencias.js')).calcular();

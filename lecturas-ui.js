@@ -58,7 +58,7 @@ function tarjetaHTML(c, ci){
   return '<article class="vidrio lec-card"><header><span class="lec-simb" aria-hidden="true">'+esc(c.simbolo)+'</span><div><h4>'+esc(c.trad)+'</h4><small>Mirada tradicional, no predicción</small></div></header>'+
     c.items.map(function(i, ii){
       var extra = '';
-      if(i.id && i.incierto) extra = '<p class="lec-incierto">'+esc(T.luna_incierta)+'</p>';
+      if(i.id && i.incierto) extra = '<p class="lec-incierto">'+esc(i.cuerpo === 'sol' ? T.sol_incierto : T.luna_incierta)+'</p>';
       else if(i.id && i.tags && i.tags.length) extra = marcaHTML(c, i, 'lm-'+ci+'-'+ii);
       return '<div class="lec-item"><b>'+esc(i.k)+'</b><p>'+esc(i.d)+'</p>'+extra+'</div>';
     }).join('')+
@@ -85,8 +85,8 @@ function actualizarRepite(){
   poner('lec-parte-c', r.texto ? '<p class="lec-concl">'+esc(r.texto)+'</p>' : '');
   var azar;
   if(base){
-    var TA = L.TABLA_AZAR; azar = L.rellenar(L.AVISOS_AZAR[0], {mediana: TA.repetidos.mediana});
-    if(r.tema && TA.temas[r.tema]) azar += ' ' + L.rellenar(L.AVISOS_AZAR[1], {tema: r.tema, pctTema: Math.round(TA.temas[r.tema].dos)});
+    /* las cifras de la tabla solo valen si se ve lo mismo que ella midio (ver Lecturas.azarExacto) */
+    azar = L.textoAzar(TRADS, ULTIMA.resumen.conNombre, ULTIMA.resumen.conPalma, r.tema);
   } else azar = 'Que varias tradiciones coincidan no es una prueba. Sus descripciones son amplias y casi cualquier persona se reconoce en ellas (a esto se le llama efecto Barnum). Úsalo como espejo para pensar, no como verdad.';
   poner('lec-parte-azar', '<p class="lec-nota">'+esc(azar)+'</p>');
 }

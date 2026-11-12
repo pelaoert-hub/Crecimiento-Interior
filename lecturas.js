@@ -266,17 +266,17 @@ function leer(datos){
   nacTs = utcDeLocal(y, m, d, hayHora ? +datos.hora : 12, hayHora ? (+datos.min||0) : 0, tz);
 
   /* astrologia occidental */
-  var solN = signoDeLon(lonSol(nacTs)), lunaN = signoDeLon(lonLuna(nacTs)), avisos = [], lunaIncierta = false;
+  var solN = signoDeLon(lonSol(nacTs)), lunaN = signoDeLon(lonLuna(nacTs)), avisos = [], lunaIncierta = false, solIncierto = false;
   if(!hayHora){
     var ini = utcDeLocal(y, m, d, 0, 0, tz), fin = ini + 86400000;
     var s1 = signoDeLon(lonSol(ini)), s2 = signoDeLon(lonSol(fin)), l1 = signoDeLon(lonLuna(ini)), l2 = signoDeLon(lonLuna(fin));
-    if(s1[0] !== s2[0]) avisos.push('Naciste el día en que el Sol cambia de signo (' + s1[0] + ' a ' + s2[0] + '). Con la hora exacta se sabría cuál es el tuyo.');
+    if(s1[0] !== s2[0]){ solIncierto = true; avisos.push('Naciste el día en que el Sol cambia de signo (' + s1[0] + ' a ' + s2[0] + '). Con la hora exacta se sabría cuál es el tuyo.'); }
     if(l1[0] !== l2[0]) lunaIncierta = true;
     if(l1[0] !== l2[0]) avisos.push('Ese día la Luna cambió de signo (' + l1[0] + ' a ' + l2[0] + '). Sin la hora de nacimiento no se puede saber cuál es la tuya.');
   }
   var astro = carta('Astrología occidental', solN[1], [
-    {k: 'Sol en ' + solN[0] + ' (' + solN[2] + ', ' + solN[3] + ')', d: 'Tradicionalmente se asocia con ' + solN[4], tags: solN[6], id: ID(solN)},
-    {k: 'Luna en ' + lunaN[0], d: lunaN[5], tags: lunaN[6], id: ID(lunaN), incierto: lunaIncierta}
+    {k: 'Sol en ' + solN[0] + ' (' + solN[2] + ', ' + solN[3] + ')', d: 'Tradicionalmente se asocia con ' + solN[4], tags: solN[6], id: ID(solN), incierto: solIncierto, cuerpo: 'sol'},
+    {k: 'Luna en ' + lunaN[0], d: lunaN[5], tags: lunaN[6], id: ID(lunaN), incierto: lunaIncierta, cuerpo: 'luna'}
   ].concat(avisos.map(function(a){ return {k: 'Aviso', d: a, tags: []}; })), solN[7]);
   astro.nota = 'Se calcula el Sol y la Luna. El ascendente, las casas y los demás planetas necesitan hora y lugar exactos y tablas astronómicas completas, y aquí no se incluyen.';
 
@@ -287,10 +287,10 @@ function leer(datos){
   chino.nota = 'El año chino empieza en el Año Nuevo Chino (entre finales de enero y mediados de febrero). Si naciste en esas fechas, comprueba el tuyo.';
 
   /* numerologia pitagorica */
-  var cam = caminoDeVida(y, m, d), nom = datos.nombre || '', items = [];
+  var cam = caminoDeVida(y, m, d), nom = datos.nombre || '', items = [], conNombre = limpiar(nom).length >= 2;
   function it(clave, n){ var t = NUM[n]; items.push({k: CONTEXTO_NUM[clave].split(',')[0] + ' ' + n + ': ' + t[0], d: CONTEXTO_NUM[clave].split(',').slice(1).join(',').trim().replace(/^./, function(c){ return c.toUpperCase(); }) + '. Se asocia con ' + t[1] + '.', tags: t[2], id: ID(t)}); }
   it('camino', cam);
-  if(limpiar(nom).length >= 2){
+  if(conNombre){
     it('expresion', red(sumaNombre(nom, function(){ return true; })));
     it('alma', red(sumaNombre(nom, esVocal)) || 9);
     it('personalidad', red(sumaNombre(nom, function(c){ return !esVocal(c); })) || 9);
@@ -369,7 +369,7 @@ function leer(datos){
     carta('Astrología china', '☯', [{k: 'Año actual: ' + anH[0] + ' de ' + elH[0], d: 'Se asocia con ' + anH[1] + '. ' + relCh, tags: anH[2], id: ID(anH)}])
   ];
 
-  return {nacimiento: tarjetasNac, hoy: hoy, mes: mes, ano: ano, resumen: {solN: solN[0], lunaN: lunaN[0], animal: an[0] + ' de ' + el[0], camino: cam, persAnio: persAnio, persMes: persMes, persDia: persDia}};
+  return {nacimiento: tarjetasNac, hoy: hoy, mes: mes, ano: ano, resumen: {conNombre: conNombre, conPalma: pItems.length > 0, solN: solN[0], lunaN: lunaN[0], animal: an[0] + ' de ' + el[0], camino: cam, persAnio: persAnio, persMes: persMes, persDia: persDia}};
 }
 
 /* ---------- lo que se repite entre tradiciones ---------- */
@@ -449,6 +449,8 @@ var AVISOS_AZAR = [
  'A {pctTema} de cada 100 fechas les sale «{tema}» en dos o más familias solo por cómo están hechas las cuentas. Es un dato sobre la herramienta, no sobre ti.',
  'Numerología, cábala, tarot y día de la semana salen de las mismas cifras de tu fecha. Por eso aquí cuentan como una sola familia, y no como cuatro.'
 ];
+/* version sin cifras: se usa cuando la cuenta de la tabla ya no describe lo que la persona ve (ver azarExacto) */
+var AVISO_AZAR_SIN_CIFRAS = 'En fechas elegidas al azar, casi todo el mundo tiene varios temas repetidos. Repetirse aquí es lo normal. Lo que tú marcas es lo que cuenta.';
 function rellenar(plantilla, datos){ return String(plantilla).replace(/\{(\w+)\}/g, function(m, k){ return datos && datos[k] != null ? String(datos[k]) : m; }); }
 
 /* ---------- tabla del azar ----------
@@ -489,6 +491,7 @@ var TEXTOS_UI = {
  marca_pregunta: '¿Te dice algo?',
  marca_si: 'Me dice algo', marca_no: 'No me dice nada', marca_nose: 'No sé',
  luna_incierta: 'Sin la hora de nacimiento no se sabe con certeza el signo de la Luna, así que este texto no se puede marcar ni cuenta en lo que se repite.',
+ sol_incierto: 'Sin la hora de nacimiento no se sabe con certeza el signo del Sol, así que este texto no se puede marcar ni cuenta en lo que se repite.',
  repite_titulo: 'Lo que se repite entre tradiciones',
  marcado_titulo: 'Lo que tú marcaste',
  aparece_en: 'aparece en {n} de {max} familias',
@@ -498,6 +501,28 @@ var TEXTOS_UI = {
  nada_repetido: 'Aquí cada tradición mira algo distinto y no hay temas que se repitan.',
  pestana_vacia: 'Con las tradiciones que elegiste no hay nada que mostrar en esta pestaña.'
 };
+
+/* ---------- la linea del azar con cifras solo es exacta si la persona ve lo mismo que midio la tabla ----------
+   TABLA_AZAR se calculo con las 7 tradiciones que salen de la fecha, sin nombre (la numerologia por nombre
+   anade cifras) y sin palma. Si falta alguna tradicion, hay nombre que entra en la cuenta o hay quiromancia
+   en la cuenta, las cifras ya no describen lo que se ve y se muestra la version sin cifras.
+   claves = tradiciones elegidas; hayNombre = nombre completo rellenado; hayPalma = alguna linea de la palma rellenada.
+   La palma o el nombre solo cuentan si su tradicion esta elegida (quiromancia / numerologia). */
+function azarExacto(claves, hayNombre, hayPalma){
+  claves = claves || [];
+  var deFecha = TRADICIONES.filter(function(t){ return !t.soloConPalma; });
+  if(!deFecha.every(function(t){ return claves.indexOf(t.clave) >= 0; })) return false;
+  if(hayNombre && claves.indexOf('numerologia') >= 0) return false;
+  if(hayPalma && claves.indexOf('quiromancia') >= 0) return false;
+  return true;
+}
+/* texto del azar para "Tu base": con cifras si es exacto; si no, la version general. tema = el de la conclusion (opcional) */
+function textoAzar(claves, hayNombre, hayPalma, tema){
+  if(!azarExacto(claves, hayNombre, hayPalma)) return AVISO_AZAR_SIN_CIFRAS;
+  var t = rellenar(AVISOS_AZAR[0], {mediana: TABLA_AZAR.repetidos.mediana});
+  if(tema && TABLA_AZAR.temas[tema]) t += ' ' + rellenar(AVISOS_AZAR[1], {tema: tema, pctTema: Math.round(TABLA_AZAR.temas[tema].dos)});
+  return t;
+}
 
 /* resumen: funcion PURA. Cruza lo que se repite entre familias (de las tarjetas elegidas) con lo que la
    persona marco. marcas = {idTexto: 'si'|'no'}; "No se" = sin entrada. Los textos con incierto (Luna sin hora)
@@ -513,8 +538,9 @@ function resumen(tarjetas, marcas){
   var repetidos = co.temas.filter(function(t){ return t.n >= 2; });
   var vistos = {}, nSi = 0, nNo = 0, veces = {}, temasNo = {}, excluidos = [];
   tarjetas.forEach(function(c){ (c.items || []).forEach(function(i){
-    if(!i.id || vistos[i.id]) return; vistos[i.id] = true;
+    if(!i.id) return;
     if(i.incierto){ excluidos.push(i.id); return; }
+    if(vistos[i.id]) return; vistos[i.id] = true;
     var m = marcas[i.id];
     if(m === 'si'){ nSi++; (i.tags || []).forEach(function(t){ veces[t] = (veces[t] || 0) + 1; }); }
     else if(m === 'no'){ nNo++; (i.tags || []).forEach(function(t){ temasNo[t] = true; }); }
@@ -543,7 +569,7 @@ function resumen(tarjetas, marcas){
 }
 
 raiz.Lecturas = {leer: leer, coincidencias: coincidencias, coincidenciasPorFamilia: coincidenciasPorFamilia, catalogo: catalogo,
-  TRADICIONES: TRADICIONES, tradicionDe: tradicionDe, elegir: elegir, resumen: resumen, TEXTOS_UI: TEXTOS_UI,
+  TRADICIONES: TRADICIONES, tradicionDe: tradicionDe, elegir: elegir, resumen: resumen, azarExacto: azarExacto, textoAzar: textoAzar, AVISO_AZAR_SIN_CIFRAS: AVISO_AZAR_SIN_CIFRAS, TEXTOS_UI: TEXTOS_UI,
   TEMAS: TEMAS, DESCRIPCION_TEMAS: DESCRIPCION_TEMAS, FAMILIAS: FAMILIAS, familiaDe: familiaDe, NOMBRE_SECCION: NOMBRE_SECCION,
   ORIGENES: ORIGENES, CONCLUSIONES: CONCLUSIONES, AVISOS_AZAR: AVISOS_AZAR, rellenar: rellenar, TABLA_AZAR: TABLA_AZAR, _t: {arbolDe: arbolDe, lonSol: lonSol, lonLuna: lonLuna, anoNuevoChino: anoNuevoChino, caminoDeVida: caminoDeVida, sumaNombre: sumaNombre, esVocal: esVocal, red: red, arcanosDe: arcanosDe, utcDeLocal: utcDeLocal, proximaFase: proximaFase, elong: elong, T_de: T_de}};
 })(typeof window !== 'undefined' ? window : globalThis);
